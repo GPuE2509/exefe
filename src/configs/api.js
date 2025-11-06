@@ -1,7 +1,7 @@
 // API Configuration
 const API_CONFIG = {
-  BASE_URL: 'http://localhost:3000/api',
-  TIMEOUT: 10000,
+  BASE_URL: 'https://nonexternally-jaggy-rufus.ngrok-free.dev/api',
+  TIMEOUT: 15000,
   
   // API Endpoints
   ENDPOINTS: {
