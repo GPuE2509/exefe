@@ -1,7 +1,7 @@
 /* About Page Styles - Dessert Theme */
 .about-page {
     min-height: 100vh;
-    background-color: #f8e7c9; /* Cream background */
+    background-color: transparent;
     padding: 0;
 }
 
@@ -14,13 +14,14 @@
 /* Welcome Section */
 .welcome-section {
     padding: 80px 0;
-    background-color: #f8e7c9;
+    background-color: transparent;
 }
 
 .welcome-title {
     font-family: 'Georgia', serif;
     font-size: 3rem;
-    color: #820d2c; /* Maroon */
+    color: #820d2c;
+    /* Maroon */
     text-align: center;
     margin-bottom: 30px;
     font-weight: bold;
@@ -84,7 +85,7 @@
 /* Goal Section */
 .goal-section {
     padding: 80px 0;
-    background-color: #f8e7c9;
+    background-color: transparent;
 }
 
 .section-title {
@@ -137,11 +138,13 @@
 /* Contact Us Section */
 .contact-section {
     padding: 60px 0;
-    background-color: #f8e7c9;
+    background-color: transparent;
 }
 
 .contact-card {
-    background-color: #fffacd; /* Light yellow */
+    background-color: rgba(255, 250, 205, 0.9);
+    /* Light yellow with opacity */
+    backdrop-filter: blur(5px);
     border-radius: 20px;
     padding: 60px 40px;
     text-align: center;
@@ -159,7 +162,7 @@
 /* FAQ Section */
 .faq-section {
     padding: 80px 0;
-    background-color: #f8e7c9;
+    background-color: transparent;
     position: relative;
 }
 
@@ -205,18 +208,27 @@
 }
 
 @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 /* Subscription Section */
 .subscription-section {
     padding: 60px 0;
-    background-color: #f8e7c9;
+    background-color: transparent;
 }
 
 .subscription-card {
-    background-color: #fffacd; /* Light yellow */
+    background-color: rgba(255, 250, 205, 0.9);
+    /* Light yellow with opacity */
+    backdrop-filter: blur(5px);
     border-radius: 20px;
     padding: 60px 40px;
     text-align: center;
@@ -300,46 +312,46 @@
     .welcome-title {
         font-size: 2.2rem;
     }
-    
+
     .welcome-text {
         font-size: 1rem;
     }
-    
+
     .main-image .image-placeholder {
         height: 200px;
     }
-    
+
     .small-images {
         gap: 15px;
     }
-    
+
     .small-images .image-placeholder {
         width: 100px;
         height: 100px;
     }
-    
+
     .goal-content {
         grid-template-columns: 1fr;
         gap: 30px;
     }
-    
+
     .section-title {
         font-size: 2rem;
     }
-    
+
     .contact-title {
         font-size: 2rem;
     }
-    
+
     .subscription-title {
         font-size: 1.5rem;
     }
-    
+
     .form-row {
         flex-direction: column;
         gap: 15px;
     }
-    
+
     .contact-card,
     .subscription-card {
         padding: 40px 20px;

@@ -53,14 +53,14 @@ const ImageManagementPage = () => {
   const fetchBooks = async () => {
     try {
       const response = await adminBooksService.getBooks();
-      
+
       if (response.success) {
         setBooks(response.data?.books || []);
       } else {
-        message.error(response.message || 'Lỗi khi tải danh sách sách');
+        message.error(response.message || 'Error fetching book list');
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Lỗi khi tải danh sách sách';
+      const errorMessage = error.response?.data?.message || error.message || 'Error fetching book list';
       message.error(errorMessage);
       console.error('Error fetching books:', error);
     }
@@ -70,14 +70,14 @@ const ImageManagementPage = () => {
     try {
       setLoading(true);
       const response = await adminBookImagesService.getBookImages(bookId);
-      
+
       if (response.success) {
         setImages(response.data || []);
       } else {
-        message.error(response.message || 'Lỗi khi tải danh sách ảnh');
+        message.error(response.message || 'Error fetching image list');
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Lỗi khi tải danh sách ảnh';
+      const errorMessage = error.response?.data?.message || error.message || 'Error fetching image list';
       message.error(errorMessage);
       console.error('Error fetching images:', error);
     } finally {
@@ -92,7 +92,7 @@ const ImageManagementPage = () => {
 
   const handleUploadImages = async (fileList) => {
     if (!selectedBookId) {
-      message.warning('Vui lòng chọn sách trước');
+      message.warning('Please select a book first');
       return;
     }
 
@@ -100,15 +100,15 @@ const ImageManagementPage = () => {
       setUploadLoading(true);
       const files = fileList.map(file => file.originFileObj || file);
       const response = await adminBookImagesService.uploadBookImages(selectedBookId, files);
-      
+
       if (response.success) {
-        message.success(response.message || 'Tải ảnh thành công');
+        message.success(response.message || 'Images uploaded successfully');
         fetchImages(selectedBookId);
       } else {
-        message.error(response.message || 'Lỗi khi tải ảnh');
+        message.error(response.message || 'Error uploading images');
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Lỗi khi tải ảnh';
+      const errorMessage = error.response?.data?.message || error.message || 'Error uploading images';
       message.error(errorMessage);
       console.error('Error uploading images:', error);
     } finally {
@@ -120,15 +120,15 @@ const ImageManagementPage = () => {
     try {
       setDeleteLoading(true);
       const response = await adminBookImagesService.deleteBookImage(selectedBookId, imageId);
-      
+
       if (response.success) {
-        message.success(response.message || 'Xóa ảnh thành công');
+        message.success(response.message || 'Image deleted successfully');
         fetchImages(selectedBookId);
       } else {
-        message.error(response.message || 'Lỗi khi xóa ảnh');
+        message.error(response.message || 'Error deleting image');
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Lỗi khi xóa ảnh';
+      const errorMessage = error.response?.data?.message || error.message || 'Error deleting image';
       message.error(errorMessage);
       console.error('Error deleting image:', error);
     } finally {
@@ -139,15 +139,15 @@ const ImageManagementPage = () => {
   const handleSetMainImage = async (imageId) => {
     try {
       const response = await adminBookImagesService.setMainImage(selectedBookId, imageId);
-      
+
       if (response.success) {
-        message.success(response.message || 'Đặt ảnh chính thành công');
+        message.success(response.message || 'Main image set successfully');
         fetchImages(selectedBookId);
       } else {
-        message.error(response.message || 'Lỗi khi đặt ảnh chính');
+        message.error(response.message || 'Error setting main image');
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Lỗi khi đặt ảnh chính';
+      const errorMessage = error.response?.data?.message || error.message || 'Error setting main image';
       message.error(errorMessage);
       console.error('Error setting main image:', error);
     }
@@ -160,25 +160,23 @@ const ImageManagementPage = () => {
   };
 
   const uploadProps = {
-    name: 'images',
-    multiple: true,
+    name: 'image',
+    multiple: false,
     accept: 'image/*',
     listType: 'picture-card',
-    beforeUpload: () => false,
-    onChange: ({ fileList }) => {
-      const validFiles = fileList.filter(file => file.status === 'ready');
-      if (validFiles.length > 0) {
-        handleUploadImages(validFiles);
-      }
+    beforeUpload: (file) => {
+      handleUploadImages([file]);
+      return false;
     },
+    onChange: () => {},
     showUploadList: false,
   };
 
   const columns = [
     {
-      title: 'Ảnh',
-      dataIndex: 'imageUrl',
-      key: 'imageUrl',
+      title: 'Image',
+      dataIndex: 'url',
+      key: 'url',
       width: 120,
       render: (imageUrl, record) => (
         <div style={{ position: 'relative' }}>
@@ -189,7 +187,7 @@ const ImageManagementPage = () => {
             style={{ objectFit: 'cover', borderRadius: '4px' }}
             preview={false}
           />
-          {record.isMain && (
+          {record.isCover && (
             <Tag
               color="gold"
               style={{
@@ -199,20 +197,21 @@ const ImageManagementPage = () => {
                 fontSize: '10px',
               }}
             >
-              <StarFilled /> Chính
+              <StarFilled /> Main
             </Tag>
           )}
         </div>
       ),
     },
     {
-      title: 'Tên file',
+      title: 'Filename',
       dataIndex: 'filename',
       key: 'filename',
       ellipsis: true,
+      render: (_, record) => record.filename || `image_${record._id?.slice(-6) || ''}`,
     },
     {
-      title: 'Kích thước',
+      title: 'Size',
       dataIndex: 'fileSize',
       key: 'fileSize',
       render: (size) => {
@@ -222,45 +221,45 @@ const ImageManagementPage = () => {
       },
     },
     {
-      title: 'Định dạng',
+      title: 'Format',
       dataIndex: 'mimeType',
       key: 'mimeType',
-      render: (mimeType) => {
-        const format = mimeType?.split('/')[1]?.toUpperCase();
-        return <Tag color="blue">{format}</Tag>;
+      render: (mimeType, record) => {
+        const format = mimeType?.split('/')[1]?.toUpperCase() || 'IMAGE';
+        return <Tag color="blue">{format || record.url?.split('.').pop()?.toUpperCase()}</Tag>;
       },
     },
     {
-      title: 'Trạng thái',
-      dataIndex: 'isMain',
-      key: 'isMain',
+      title: 'Status',
+      dataIndex: 'isCover',
+      key: 'isCover',
       render: (isMain) => (
         <Tag color={isMain ? 'gold' : 'default'}>
-          {isMain ? 'Ảnh chính' : 'Ảnh phụ'}
+          {isMain ? 'Main Image' : 'Sub Image'}
         </Tag>
       ),
     },
     {
-      title: 'Ngày tải',
+      title: 'Uploaded At',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: (date) => new Date(date).toLocaleDateString('vi-VN'),
+      render: (date) => new Date(date).toLocaleDateString('en-US'),
     },
     {
-      title: 'Thao tác',
+      title: 'Actions',
       key: 'actions',
       render: (_, record) => (
         <Space size="small">
-          <Tooltip title="Xem ảnh">
+          <Tooltip title="View Image">
             <Button
               type="primary"
               icon={<EyeOutlined />}
               size="small"
-              onClick={() => handlePreview(record.imageUrl, record.filename)}
+              onClick={() => handlePreview(record.url, record.filename)}
             />
           </Tooltip>
-          {!record.isMain && (
-            <Tooltip title="Đặt làm ảnh chính">
+          {!record.isCover && (
+            <Tooltip title="Set as Main">
               <Button
                 icon={<StarOutlined />}
                 size="small"
@@ -269,10 +268,10 @@ const ImageManagementPage = () => {
             </Tooltip>
           )}
           <Popconfirm
-            title="Bạn có chắc muốn xóa ảnh này?"
+            title="Are you sure you want to delete this image?"
             onConfirm={() => handleDeleteImage(record._id)}
-            okText="Xóa"
-            cancelText="Hủy"
+            okText="Delete"
+            cancelText="Cancel"
           >
             <Button
               danger
@@ -293,13 +292,13 @@ const ImageManagementPage = () => {
         <Row justify="space-between" align="middle" style={{ marginBottom: '16px' }}>
           <Col>
             <Title level={2} style={{ margin: 0 }}>
-              Quản lý ảnh sách
+              Book Image Management
             </Title>
           </Col>
           <Col>
             <Space>
               <Select
-                placeholder="Chọn sách"
+                placeholder="Select book"
                 style={{ width: 200 }}
                 onChange={handleBookChange}
                 value={selectedBookId}
@@ -316,7 +315,7 @@ const ImageManagementPage = () => {
                   icon={<UploadOutlined />}
                   disabled={!selectedBookId}
                 >
-                  Tải ảnh
+                  Upload Image
                 </Button>
               </Upload>
             </Space>
@@ -326,27 +325,27 @@ const ImageManagementPage = () => {
         {selectedBook && (
           <div style={{ marginBottom: '16px', padding: '12px', background: '#f5f5f5', borderRadius: '6px' }}>
             <Title level={4} style={{ margin: 0 }}>
-              Sách: {selectedBook.title}
+              Book: {selectedBook.title}
             </Title>
             <p style={{ margin: 0, color: '#666' }}>
-              Tác giả: {selectedBook.authors?.join(', ')}
+              Author: {selectedBook.authors?.join(', ')}
             </p>
           </div>
         )}
 
-         <Table
-           columns={columns}
-           dataSource={images || []}
-           rowKey="_id"
-           loading={loading}
-           pagination={{
-             pageSize: 10,
-             showSizeChanger: true,
-             showQuickJumper: true,
-             showTotal: (total, range) =>
-               `${range[0]}-${range[1]} của ${total} ảnh`,
-           }}
-         />
+        <Table
+          columns={columns}
+          dataSource={images || []}
+          rowKey="_id"
+          loading={loading}
+          pagination={{
+            pageSize: 10,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} images`,
+          }}
+        />
       </Card>
 
       <Modal
@@ -364,16 +363,16 @@ const ImageManagementPage = () => {
       </Modal>
 
       {/* Loading Modals */}
-      <LoadingModal 
+      <LoadingModal
         visible={uploadLoading}
-        message="Đang tải ảnh..."
-        tip="Vui lòng đợi trong giây lát"
+        message="Uploading images..."
+        tip="Please wait a moment"
       />
-      
-      <LoadingModal 
+
+      <LoadingModal
         visible={deleteLoading}
-        message="Đang xóa ảnh..."
-        tip="Vui lòng đợi trong giây lát"
+        message="Deleting image..."
+        tip="Please wait a moment"
       />
     </div>
   );

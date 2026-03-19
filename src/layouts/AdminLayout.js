@@ -12,6 +12,7 @@ import {
   SettingOutlined,
   LogoutOutlined,
   BarsOutlined,
+  FileImageOutlined,
 } from '@ant-design/icons';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { authService } from '../services/authService';
@@ -54,32 +55,37 @@ const AdminLayout = () => {
     {
       key: '/admin/books',
       icon: <BookOutlined />,
-      label: 'Quản lý sách',
+      label: 'Book Management',
     },
     {
       key: '/admin/audios',
       icon: <AudioOutlined />,
-      label: 'Quản lý Audio',
+      label: 'Audio Management',
     },
     {
       key: '/admin/images',
       icon: <PictureOutlined />,
-      label: 'Quản lý Ảnh',
+      label: 'Image Management',
     },
     {
       key: '/admin/genres',
       icon: <TagsOutlined />,
-      label: 'Quản lý Thể loại',
+      label: 'Genre Management',
+    },
+    {
+      key: '/admin/banners',
+      icon: <PictureOutlined />,
+      label: 'Banner Management',
     },
     {
       key: '/admin/users',
       icon: <UserOutlined />,
-      label: 'Quản lý Người dùng',
+      label: 'User Management',
     },
     {
       key: '/admin/settings',
       icon: <SettingOutlined />,
-      label: 'Cài đặt',
+      label: 'Settings',
     },
   ];
 
@@ -88,12 +94,12 @@ const AdminLayout = () => {
     {
       key: 'profile',
       icon: <UserOutlined />,
-      label: 'Hồ sơ',
+      label: 'Profile',
     },
     {
       key: 'settings',
       icon: <SettingOutlined />,
-      label: 'Cài đặt',
+      label: 'Settings',
     },
     {
       type: 'divider',
@@ -101,7 +107,7 @@ const AdminLayout = () => {
     {
       key: 'logout',
       icon: <LogoutOutlined />,
-      label: 'Đăng xuất',
+      label: 'Logout',
       danger: true,
     },
   ];
@@ -147,7 +153,7 @@ const AdminLayout = () => {
         <BarsOutlined style={{ fontSize: '24px', color: '#fff' }} />
         {(!collapsed || isMobile) && <span>Admin Panel</span>}
       </div>
-      
+
       <Menu
         theme="dark"
         mode="inline"
@@ -163,9 +169,9 @@ const AdminLayout = () => {
     <Layout style={{ minHeight: '100vh' }}>
       {/* Desktop Sidebar */}
       {!isMobile && (
-        <Sider 
-          trigger={null} 
-          collapsible 
+        <Sider
+          trigger={null}
+          collapsible
           collapsed={collapsed}
           theme="dark"
           width={250}
@@ -190,7 +196,7 @@ const AdminLayout = () => {
           {sidebarContent}
         </Drawer>
       )}
-      
+
       <Layout className={isMobile ? 'mobile-layout' : 'desktop-layout'}>
         <Header
           className="admin-header"
@@ -216,10 +222,10 @@ const AdminLayout = () => {
               }}
             />
             <h2 className="header-title">
-              {isMobile ? 'Admin' : 'Hệ thống quản lý sách'}
+              {isMobile ? 'Admin' : 'Book Management System'}
             </h2>
           </div>
-          
+
           <Dropdown
             menu={{
               items: userMenuItems,
@@ -229,16 +235,16 @@ const AdminLayout = () => {
             arrow
           >
             <div className="user-info">
-              <Avatar 
-                size={isMobile ? 'default' : 'large'} 
-                icon={<UserOutlined />} 
+              <Avatar
+                size={isMobile ? 'default' : 'large'}
+                icon={<UserOutlined />}
                 style={{ marginRight: isMobile ? '4px' : '8px' }}
               />
               {!isMobile && <span>{authService.getCurrentUser()?.fullName || 'Admin User'}</span>}
             </div>
           </Dropdown>
         </Header>
-        
+
         <Content
           className="admin-content"
           style={{

@@ -12,7 +12,7 @@ const QRScannerPage = () => {
   const [audioDuration, setAudioDuration] = useState(0);
   const [audioCurrentTime, setAudioCurrentTime] = useState(0);
   const [showCameraPopup, setShowCameraPopup] = useState(false);
-  
+
   const videoRef = useRef(null);
   const qrScannerRef = useRef(null);
   const audioRef = useRef(null);
@@ -47,19 +47,19 @@ const QRScannerPage = () => {
   const fetchAudioData = async (qrToken) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await fetch(`http://localhost:3000/api/books/qr/${qrToken}`);
       const data = await response.json();
-      
+
       if (data.success) {
         setAudioData(data.data);
         setCurrentAudioIndex(0);
       } else {
-        setError(data.message || 'Không thể tải dữ liệu audio');
+        setError(data.message || 'Cannot load audio data');
       }
     } catch (err) {
-      setError('Lỗi kết nối đến server');
+      setError('Connection error to server');
       console.error('Error fetching audio data:', err);
     } finally {
       setLoading(false);
@@ -73,7 +73,7 @@ const QRScannerPage = () => {
       setScannedData(null);
       setAudioData(null);
       setError(null);
-      
+
       // Wait for popup to show and video element to be ready
       setTimeout(async () => {
         if (qrScannerRef.current) {
@@ -81,7 +81,7 @@ const QRScannerPage = () => {
         }
       }, 100);
     } catch (err) {
-      setError('Không thể truy cập camera. Vui lòng cho phép quyền truy cập camera.');
+      setError('Cannot access camera. Please allow camera permission.');
       setShowCameraPopup(false);
     }
   };
@@ -94,8 +94,12 @@ const QRScannerPage = () => {
     setShowCameraPopup(false);
   };
 
+  // ... (Audio functions omitted for brevity if unchanged) ...
   // Phát audio
-  const playAudio = (audioUrl) => {
+  const playAudio = (audioUrl, index = currentAudioIndex) => {
+    if (!audioUrl) return;
+
+    setCurrentAudioIndex(index);
     if (audioRef.current) {
       audioRef.current.src = audioUrl;
       audioRef.current.play();
@@ -114,9 +118,10 @@ const QRScannerPage = () => {
   // Chuyển audio tiếp theo
   const nextAudio = () => {
     if (audioData && currentAudioIndex < audioData.audioItems.length - 1) {
-      setCurrentAudioIndex(currentAudioIndex + 1);
+      const nextIndex = currentAudioIndex + 1;
+      setCurrentAudioIndex(nextIndex);
       if (isPlaying) {
-        playAudio(audioData.audioItems[currentAudioIndex + 1].audioUrl);
+        playAudio(audioData.audioItems[nextIndex].audioUrl, nextIndex);
       }
     }
   };
@@ -124,9 +129,10 @@ const QRScannerPage = () => {
   // Chuyển audio trước
   const prevAudio = () => {
     if (currentAudioIndex > 0) {
-      setCurrentAudioIndex(currentAudioIndex - 1);
+      const prevIndex = currentAudioIndex - 1;
+      setCurrentAudioIndex(prevIndex);
       if (isPlaying) {
-        playAudio(audioData.audioItems[currentAudioIndex - 1].audioUrl);
+        playAudio(audioData.audioItems[prevIndex].audioUrl, prevIndex);
       }
     }
   };
@@ -156,8 +162,18 @@ const QRScannerPage = () => {
 
   // Xử lý khi audio kết thúc
   const handleAudioEnded = () => {
+    if (!audioData) {
+      setIsPlaying(false);
+      return;
+    }
+
+    if (currentAudioIndex < audioData.audioItems.length - 1) {
+      const nextIndex = currentAudioIndex + 1;
+      playAudio(audioData.audioItems[nextIndex].audioUrl, nextIndex);
+      return;
+    }
+
     setIsPlaying(false);
-    nextAudio();
   };
 
   // Format thời gian
@@ -176,22 +192,22 @@ const QRScannerPage = () => {
           {/* Left Section - QR Form */}
           <div className="qr-form-section">
             <div className="form-card">
-              <h2 className="form-title">Quét QR Code Sách</h2>
-              
-              <div className="form-content">                
-                <button 
-                  onClick={startScanning} 
+              <h2 className="form-title">Scan Book QR Code</h2>
+
+              <div className="form-content">
+                <button
+                  onClick={startScanning}
                   className="scan-btn"
                   disabled={loading}
                 >
-                  {loading ? 'Đang quét...' : 'BẮT ĐẦU QUÉT'}
+                  {loading ? 'Scanning...' : 'START SCANNING'}
                 </button>
-                
+
                 <div className="note-section">
-                  <h4>Lưu ý:</h4>
-                  <p>• Đảm bảo camera có quyền truy cập</p>
-                  <p>• Hướng camera vào QR code trên sách</p>
-                  <p>• Liên hệ hỗ trợ: 1900 7070 hoặc 1900 969 681</p>
+                  <h4>Note:</h4>
+                  <p>• Ensure camera permission is granted</p>
+                  <p>• Point camera at the QR code on the book</p>
+                  <p>• Contact support: 1900 7070 or 1900 969 681</p>
                 </div>
               </div>
             </div>
@@ -200,24 +216,24 @@ const QRScannerPage = () => {
           {/* Right Section - Promotional Banner */}
           <div className="promo-section">
             <div className="instruction-banner">
-              <p>Vui lòng bấm quét QR code trên sách để nghe audio tương ứng</p>
+              <p>Please scan the QR code on the book to listen to the audio</p>
             </div>
-            
+
             <div className="promo-banner">
               <div className="promo-content">
                 <div className="cta-buttons">
                   <button className="book-now-btn">
                     <span className="phone-icon">📞</span>
-                    Bạn chưa có sách?
-                    <a href="/books">Mua sách ngay</a>
+                    Don't have the book?
+                    <a href="/books">Buy Now</a>
                     <span className="hot-badge">HOT</span>
                   </button>
-                  
+
                   <button className="phone-btn">
                     1900 0152
                   </button>
                 </div>
-                
+
                 <div className="character">
                   <div className="cartoon-character">📚</div>
                 </div>
@@ -231,21 +247,21 @@ const QRScannerPage = () => {
           <div className="camera-popup-overlay">
             <div className="camera-popup">
               <div className="popup-header">
-                <h3>Quét QR Code</h3>
+                <h3>Scan QR Code</h3>
                 <button onClick={closeCameraPopup} className="close-btn">✕</button>
               </div>
-              
+
               <div className="camera-container">
                 <video ref={videoRef} className="camera-video"></video>
                 <div className="scanner-overlay">
                   <div className="scanner-frame"></div>
-                  <p className="scanner-instruction">Hướng camera vào QR code trên sách</p>
+                  <p className="scanner-instruction">Point camera at the QR code on the book</p>
                 </div>
               </div>
-              
+
               <div className="popup-controls">
                 <button onClick={closeCameraPopup} className="stop-btn">
-                  Dừng quét
+                  Stop Scanning
                 </button>
               </div>
             </div>
@@ -257,7 +273,7 @@ const QRScannerPage = () => {
           <div className="loading-overlay">
             <div className="loading-container">
               <div className="spinner"></div>
-              <p>Đang tải dữ liệu audio...</p>
+              <p>Loading audio data...</p>
             </div>
           </div>
         )}
@@ -268,7 +284,7 @@ const QRScannerPage = () => {
             <div className="error-container">
               <p className="error-message">{error}</p>
               <button onClick={startScanning} className="retry-btn">
-                Thử lại
+                Retry
               </button>
             </div>
           </div>
@@ -279,35 +295,39 @@ const QRScannerPage = () => {
           <div className="audio-section">
             <div className="book-info">
               <h2>{audioData.book.title}</h2>
-              <p className="book-authors">Tác giả: {audioData.book.authors.join(', ')}</p>
+              <p className="book-authors">Author: {audioData.book.authors.join(', ')}</p>
               <p className="book-description">{audioData.book.description}</p>
-              <p className="audio-count">Tổng số audio: {audioData.totalAudioCount}</p>
+              <p className="audio-count">Total audio: {audioData.totalAudioCount}</p>
             </div>
 
             <div className="audio-player">
               <div className="current-audio-info">
-                <h3>Audio hiện tại: {audioData.audioItems[currentAudioIndex]?.term}</h3>
-                <p>Số lần phát: {audioData.audioItems[currentAudioIndex]?.playCount}</p>
+                <h3>Current audio: {audioData.audioItems[currentAudioIndex]?.term}</h3>
+                <p>Play count: {audioData.audioItems[currentAudioIndex]?.playCount}</p>
               </div>
 
               <div className="audio-controls">
-                <button 
-                  onClick={prevAudio} 
+                <button
+                  onClick={prevAudio}
                   className="btn btn-control"
                   disabled={currentAudioIndex === 0}
                 >
                   ⏮️
                 </button>
-                
-                <button 
-                  onClick={isPlaying ? pauseAudio : () => playAudio(audioData.audioItems[currentAudioIndex]?.audioUrl)} 
+
+                <button
+                  onClick={
+                    isPlaying
+                      ? pauseAudio
+                      : () => playAudio(audioData.audioItems[currentAudioIndex]?.audioUrl, currentAudioIndex)
+                  }
                   className="btn btn-play"
                 >
                   {isPlaying ? '⏸️' : '▶️'}
                 </button>
-                
-                <button 
-                  onClick={nextAudio} 
+
+                <button
+                  onClick={nextAudio}
                   className="btn btn-control"
                   disabled={currentAudioIndex === audioData.audioItems.length - 1}
                 >
@@ -317,12 +337,12 @@ const QRScannerPage = () => {
 
               <div className="audio-progress">
                 <span className="time">{formatTime(audioCurrentTime)}</span>
-                <div 
+                <div
                   className="progress-bar"
                   onClick={handleSeek}
                   onTouchEnd={handleSeek}
                 >
-                  <div 
+                  <div
                     className="progress-fill"
                     style={{
                       width: audioDuration ? `${(audioCurrentTime / audioDuration) * 100}%` : '0%'
@@ -341,25 +361,25 @@ const QRScannerPage = () => {
             </div>
 
             <div className="audio-list">
-              <h3>Danh sách Audio</h3>
+              <h3>Audio List</h3>
               <div className="audio-items">
                 {audioData.audioItems.map((audio, index) => (
-                  <div 
-                    key={audio._id} 
+                  <div
+                    key={audio._id}
                     className={`audio-item ${index === currentAudioIndex ? 'active' : ''}`}
                     onClick={() => {
                       setCurrentAudioIndex(index);
                       if (isPlaying) {
-                        playAudio(audio.audioUrl);
+                        playAudio(audio.audioUrl, index);
                       }
                     }}
                   >
                     <div className="audio-term">{audio.term}</div>
-                    <div className="audio-play-count">Phát: {audio.playCount} lần</div>
-                    <button 
+                    <div className="audio-play-count">Plays: {audio.playCount} times</div>
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        playAudio(audio.audioUrl);
+                        playAudio(audio.audioUrl, index);
                       }}
                       className="btn btn-small"
                     >

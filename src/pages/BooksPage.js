@@ -1,43 +1,94 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BookCard from '../components/BookCard';
-import { booksData, categories } from '../data/booksData';
+import bookService from '../services/bookService';
 import './BooksPage.css';
 
 const BooksPage = () => {
-  const [selectedCategories, setSelectedCategories] = useState(['all']);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 1000000 });
-  const [minRating, setMinRating] = useState(0);
-  const [sortBy, setSortBy] = useState('default');
+  const [books, setBooks] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
-  const filteredBooks = booksData.filter(book => {
-    const matchesCategory = selectedCategories.includes('all') || selectedCategories.includes(book.category);
-    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         book.author.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesPrice = book.price >= priceRange.min && book.price <= priceRange.max;
-    const matchesRating = book.rating >= minRating;
-    
-    return matchesCategory && matchesSearch && matchesPrice && matchesRating;
-  });
+  // Filter states
+  const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState(['all']);
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 1000000 });
+  const [debouncedPrice, setDebouncedPrice] = useState({ min: 0, max: 1000000 });
+  const [minRating, setMinRating] = useState(0);
+  const [sortBy, setSortBy] = useState('default');
+  const [pagination, setPagination] = useState({ page: 1, limit: 12, total: 0, totalPages: 1 });
 
-  // Sort books
-  const sortedBooks = [...filteredBooks].sort((a, b) => {
-    switch (sortBy) {
-      case 'price-low':
-        return a.price - b.price;
-      case 'price-high':
-        return b.price - a.price;
-      case 'rating':
-        return b.rating - a.rating;
-      case 'title':
-        return a.title.localeCompare(b.title);
-      case 'author':
-        return a.author.localeCompare(b.author);
-      default:
-        return 0;
-    }
-  });
+  // Debounce search term and price
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+      setDebouncedPrice(priceRange);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm, priceRange]);
+
+  // Fetch Categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await bookService.getGenres();
+        if (response.success) {
+          setCategories(response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  // Fetch Books
+  useEffect(() => {
+    const fetchBooks = async () => {
+      setLoading(true);
+      try {
+        const params = {
+          page: pagination.page,
+          limit: pagination.limit,
+          search: debouncedSearch,
+          category: selectedCategories.includes('all') ? 'all' : selectedCategories[0], // API only handles one category for now based on current logic but UI allows multiple. Let's send the first one or 'all'
+          minPrice: debouncedPrice.min,
+          maxPrice: debouncedPrice.max,
+          minRating,
+          sort: sortBy
+        };
+
+        const response = await bookService.getBooks(params);
+        if (response.success) {
+          const mappedBooks = response.data.books.map(book => ({
+            id: book._id,
+            title: book.title,
+            author: book.authors ? book.authors.join(', ') : 'Unknown',
+            price: book.price ? book.price.list : 0,
+            salePrice: book.price?.sale || null,
+            category: book.genres && book.genres.length > 0 ? book.genres[0].name : 'General',
+            image: book.image || '/img/default-book.png',
+            rating: book.ratingAvg,
+            reviews: book.ratingCount
+          }));
+
+          setBooks(mappedBooks);
+          setPagination(prev => ({
+            ...prev,
+            total: response.data.pagination.total,
+            totalPages: response.data.pagination.totalPages
+          }));
+        }
+      } catch (error) {
+        console.error('Error fetching books:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBooks();
+  }, [debouncedSearch, selectedCategories, debouncedPrice, minRating, sortBy, pagination.page]);
 
   const resetFilters = () => {
     setSelectedCategories(['all']);
@@ -45,21 +96,18 @@ const BooksPage = () => {
     setPriceRange({ min: 0, max: 1000000 });
     setMinRating(0);
     setSortBy('default');
+    setPagination(prev => ({ ...prev, page: 1 }));
   };
 
-  const handleCategoryChange = (category) => {
-    if (category === 'all') {
+  const handleCategoryChange = (categoryName) => {
+    if (categoryName === 'all') {
       setSelectedCategories(['all']);
     } else {
-      setSelectedCategories(prev => {
-        const newCategories = prev.filter(cat => cat !== 'all');
-        if (newCategories.includes(category)) {
-          return newCategories.filter(cat => cat !== category);
-        } else {
-          return [...newCategories, category];
-        }
-      });
+      // Backend currently supports single category filter better in this simple implementation
+      // So let's switch to single selection behavior for now, or just replace the array
+      setSelectedCategories([categoryName]);
     }
+    setPagination(prev => ({ ...prev, page: 1 }));
   };
 
   const closeMobileFilters = () => {
@@ -70,38 +118,38 @@ const BooksPage = () => {
     <div className="books-page">
       <div className="container">
         <div className="page-header">
-          <h1>Danh sách sách</h1>
-          <button 
+          <h1>Book List</h1>
+          <button
             className="mobile-filter-toggle"
             onClick={() => setShowMobileFilters(!showMobileFilters)}
           >
-            🔍 Bộ lọc
+            🔍 Filters
           </button>
         </div>
-        
+
         <div className="page-content">
           {/* Filter Sidebar */}
           <div className={`filter-sidebar ${showMobileFilters ? 'mobile-open' : ''}`}>
             <div className="sidebar-header">
-              <h3>Bộ lọc</h3>
+              <h3>Filters</h3>
               <button className="close-mobile-filters" onClick={closeMobileFilters}>
                 ✕
               </button>
             </div>
-            
+
             <div className="sidebar-content">
               <div className="search-box">
                 <input
                   type="text"
-                  placeholder="Tìm kiếm sách theo tên hoặc tác giả..."
+                  placeholder="Search for books by title or author..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 <span className="search-icon">🔍</span>
               </div>
-              
+
               <div className="filter-section">
-                <h4>Thể loại</h4>
+                <h4>Categories</h4>
                 <div className="category-filters">
                   <label className="checkbox-item">
                     <input
@@ -110,10 +158,10 @@ const BooksPage = () => {
                       onChange={() => handleCategoryChange('all')}
                     />
                     <span className="checkmark"></span>
-                    <span className="checkbox-label">Tất cả</span>
+                    <span className="checkbox-label">All</span>
                   </label>
                   {categories.map(category => (
-                    <label key={category.id} className="checkbox-item">
+                    <label key={category._id} className="checkbox-item">
                       <input
                         type="checkbox"
                         checked={selectedCategories.includes(category.name)}
@@ -127,58 +175,58 @@ const BooksPage = () => {
               </div>
 
               <div className="filter-section">
-                <h4>Khoảng giá</h4>
+                <h4>Price Range</h4>
                 <div className="price-range">
                   <input
                     type="number"
-                    placeholder="Từ"
-                    value={priceRange.min || ''}
-                    onChange={(e) => setPriceRange({...priceRange, min: parseInt(e.target.value) || 0})}
+                    placeholder="From"
+                    value={priceRange.min}
+                    onChange={(e) => setPriceRange(prev => ({ ...prev, min: parseInt(e.target.value) || 0 }))}
                   />
                   <span>-</span>
                   <input
                     type="number"
-                    placeholder="Đến"
-                    value={priceRange.max === 1000000 ? '' : priceRange.max}
-                    onChange={(e) => setPriceRange({...priceRange, max: parseInt(e.target.value) || 1000000})}
+                    placeholder="To"
+                    value={priceRange.max}
+                    onChange={(e) => setPriceRange(prev => ({ ...prev, max: parseInt(e.target.value) || 0 }))}
                   />
                   <span>đ</span>
                 </div>
               </div>
 
               <div className="filter-section">
-                <h4>Đánh giá tối thiểu</h4>
-                <select 
-                  value={minRating} 
+                <h4>Minimum Rating</h4>
+                <select
+                  value={minRating}
                   onChange={(e) => setMinRating(parseFloat(e.target.value))}
                 >
-                  <option value={0}>Tất cả</option>
-                  <option value={4}>4 sao trở lên</option>
-                  <option value={4.5}>4.5 sao trở lên</option>
-                  <option value={4.8}>4.8 sao trở lên</option>
+                  <option value={0}>All</option>
+                  <option value={4}>4 stars & up</option>
+                  <option value={4.5}>4.5 stars & up</option>
+                  <option value={4.8}>4.8 stars & up</option>
                 </select>
               </div>
 
               <div className="filter-section">
-                <h4>Sắp xếp theo</h4>
+                <h4>Sort by</h4>
                 <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                  <option value="default">Mặc định</option>
-                  <option value="price-low">Giá thấp đến cao</option>
-                  <option value="price-high">Giá cao đến thấp</option>
-                  <option value="rating">Đánh giá cao nhất</option>
-                  <option value="title">Tên A-Z</option>
-                  <option value="author">Tác giả A-Z</option>
+                  <option value="default">Default (Newest)</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="rating">Highest Rated</option>
+                  <option value="title">Title A-Z</option>
+                  <option value="author">Author A-Z</option>
                 </select>
               </div>
 
               <div className="filter-actions">
                 <button className="reset-btn" onClick={resetFilters}>
-                  Đặt lại 🔄
+                  Reset 🔄
                 </button>
               </div>
 
               <div className="results-info">
-                <span>Tìm thấy {sortedBooks.length} cuốn sách</span>
+                <span>Found {pagination.total} books</span>
               </div>
             </div>
           </div>
@@ -190,20 +238,47 @@ const BooksPage = () => {
 
           {/* Books Content */}
           <div className="books-content">
-            <div className="books-grid">
-              {sortedBooks.length > 0 ? (
-                sortedBooks.map(book => (
-                  <BookCard key={book.id} book={book} />
-                ))
-              ) : (
-                <div className="no-results">
-                  <p>Không tìm thấy sách nào phù hợp với tiêu chí tìm kiếm.</p>
-                  <button className="reset-btn" onClick={resetFilters}>
-                    Đặt lại bộ lọc
-                  </button>
+            {loading ? (
+              <div style={{ textAlign: 'center', padding: '50px' }}>Loading...</div>
+            ) : (
+              <>
+                <div className="books-grid">
+                  {books.length > 0 ? (
+                    books.map(book => (
+                      <BookCard key={book.id} book={book} />
+                    ))
+                  ) : (
+                    <div className="no-results" style={{ width: '100%', colSpan: 3 }}>
+                      <p>No books found matching your search criteria.</p>
+                      <button className="reset-btn" onClick={resetFilters}>
+                        Reset Filters
+                      </button>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+
+                {/* Pagination */}
+                {pagination.totalPages > 1 && (
+                  <div className="pagination" style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                    <button
+                      disabled={pagination.page === 1}
+                      onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
+                      style={{ padding: '5px 10px', cursor: 'pointer', disabled: pagination.page === 1 }}
+                    >
+                      &lt; Prev
+                    </button>
+                    <span>Page {pagination.page} / {pagination.totalPages}</span>
+                    <button
+                      disabled={pagination.page === pagination.totalPages}
+                      onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
+                      style={{ padding: '5px 10px', cursor: 'pointer' }}
+                    >
+                      Next &gt;
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>

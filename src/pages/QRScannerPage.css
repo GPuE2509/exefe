@@ -1,7 +1,7 @@
-/* QR Scanner Page - Redesigned */
+/* QR Scanner Page - Modern Design */
 .qr-scanner-page {
-  min-height: 50vh;
-  padding: 20px;
+  min-height: 80vh;
+  padding: 40px 20px;
 }
 
 .container {
@@ -25,17 +25,19 @@
 }
 
 .form-card {
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   padding: 40px;
   width: 100%;
   max-width: 400px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .form-title {
   text-align: center;
-  color: #333;
+  color: #820d2c;
   font-size: 1.8rem;
   margin-bottom: 30px;
   font-weight: bold;
@@ -47,76 +49,52 @@
   gap: 20px;
 }
 
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.input-group label {
-  color: #333;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.qr-input,
-.phone-input {
-  padding: 15px;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  font-size: 16px;
-  outline: none;
-  transition: border-color 0.3s ease;
-  background: #f9f9f9;
-}
-
-.qr-input:focus,
-.phone-input:focus {
-  border-color: #007bff;
-  background: white;
-}
-
 .scan-btn {
-  background: #007bff;
-  color: white;
+  background: #820d2c;
+  color: #f8e7c9;
   border: none;
   padding: 15px 30px;
-  border-radius: 8px;
+  border-radius: 25px;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
+  width: 100%;
 }
 
 .scan-btn:hover:not(:disabled) {
-  background: #0056b3;
+  background: #b99765;
+  color: #820d2c;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(130, 13, 44, 0.3);
 }
 
 .scan-btn:disabled {
-  background: #6c757d;
+  background: #ccc;
   cursor: not-allowed;
+  color: #666;
 }
 
 .note-section {
   margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid #eee;
+  padding: 20px;
+  background: #fff8f0;
+  border-radius: 12px;
+  border: 1px dashed #d4af7a;
 }
 
 .note-section h4 {
-  color: #333;
+  color: #820d2c;
   font-size: 16px;
   margin-bottom: 10px;
 }
 
 .note-section p {
-  color: #666;
+  color: #555;
   font-size: 14px;
   margin: 5px 0;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 /* Right Section - Promotional */
@@ -127,23 +105,26 @@
 }
 
 .instruction-banner {
-  background: #d4edda;
-  color: #155724;
-  padding: 15px 20px;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #820d2c;
+  padding: 20px;
+  border-radius: 12px;
   text-align: center;
   font-weight: 500;
+  border: 1px solid #f8e7c9;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .promo-banner {
-  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-  border-radius: 15px;
-  padding: 30px;
+  background: linear-gradient(135deg, #820d2c 0%, #6b0b24 100%);
+  border-radius: 20px;
+  padding: 40px;
   position: relative;
   overflow: hidden;
-  min-height: 300px;
+  flex: 1;
   display: flex;
   align-items: center;
+  box-shadow: 0 8px 32px rgba(130, 13, 44, 0.2);
 }
 
 .promo-banner::before {
@@ -153,7 +134,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: 
+  background-image:
     radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 2px, transparent 2px),
     radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 2px, transparent 2px);
   background-size: 30px 30px;
@@ -174,12 +155,13 @@
   gap: 15px;
 }
 
+/* Promo Buttons */
 .book-now-btn {
-  background: white;
-  color: #333;
+  background: #d4af7a;
+  color: #820d2c;
   border: none;
-  padding: 15px 25px;
-  border-radius: 25px;
+  padding: 15px 30px;
+  border-radius: 12px;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
@@ -189,10 +171,17 @@
   position: relative;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+}
+
+.book-now-btn a {
+  color: #820d2c;
+  text-decoration: none;
 }
 
 .book-now-btn:hover {
   transform: translateY(-2px);
+  background: #f8e7c9;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
@@ -202,11 +191,11 @@
 
 .hot-badge {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  background: #007bff;
+  top: -10px;
+  right: -10px;
+  background: #ff4d4f;
   color: white;
-  font-size: 10px;
+  font-size: 12px;
   padding: 4px 8px;
   border-radius: 10px;
   border: 2px solid white;
@@ -214,22 +203,20 @@
 }
 
 .phone-btn {
-  background: #ffd700;
-  color: #333;
-  border: none;
-  padding: 20px 30px;
-  border-radius: 25px;
-  font-size: 24px;
+  background: transparent;
+  color: #f8e7c9;
+  border: 2px solid #f8e7c9;
+  padding: 15px 30px;
+  border-radius: 12px;
+  font-size: 20px;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .phone-btn:hover {
-  background: #ffed4e;
+  background: rgba(248, 231, 201, 0.1);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .character {
@@ -244,9 +231,19 @@
 }
 
 @keyframes wave {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(10deg); }
-  75% { transform: rotate(-10deg); }
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(10deg);
+  }
+
+  75% {
+    transform: rotate(-10deg);
+  }
 }
 
 /* Camera Popup */
@@ -256,7 +253,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -267,10 +265,11 @@
 .camera-popup {
   background: white;
   border-radius: 20px;
-  padding: 30px;
+  padding: 0;
   max-width: 500px;
   width: 100%;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
 }
 
 .popup-header {
@@ -280,10 +279,14 @@
   margin-bottom: 20px;
   padding-bottom: 15px;
   border-bottom: 2px solid #eee;
+  background: #820d2c;
+  padding: 20px;
+  margin: 0;
+  border: none;
 }
 
 .popup-header h3 {
-  color: #333;
+  color: #f8e7c9;
   font-size: 1.5rem;
   margin: 0;
 }
@@ -314,6 +317,9 @@
   overflow: hidden;
   margin-bottom: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .camera-video {
@@ -339,10 +345,11 @@
 .scanner-frame {
   width: 200px;
   height: 200px;
-  border: 3px solid #4CAF50;
+  border: 3px solid #d4af7a;
   border-radius: 15px;
   position: relative;
   animation: pulse 2s infinite;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
 }
 
 .scanner-frame::before,
@@ -352,6 +359,7 @@
   width: 20px;
   height: 20px;
   border: 3px solid #4CAF50;
+  border-color: #820d2c;
 }
 
 .scanner-frame::before {
@@ -369,9 +377,20 @@
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.05); opacity: 0.8; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .scanner-instruction {
@@ -387,6 +406,8 @@
 .popup-controls {
   display: flex;
   justify-content: center;
+  padding: 20px;
+  background: white;
 }
 
 .stop-btn {
@@ -440,8 +461,13 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Error Overlay */
@@ -492,11 +518,13 @@
 
 /* Audio Section - Redesigned */
 .audio-section {
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 40px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  margin-top: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  margin-top: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .book-info {
@@ -504,18 +532,19 @@
   margin-bottom: 40px;
   padding-bottom: 30px;
   border-bottom: 3px solid #f0f0f0;
-  background: linear-gradient(135deg, #ffffff 0%, #ffffff 100%);
+  background: linear-gradient(135deg, #fff8f0 0%, #fff 100%);
   padding: 30px;
   border-radius: 15px;
   color: white;
+  border: 1px solid #f8e7c9;
 }
 
 .book-info h2 {
-  color: red;
+  color: #820d2c;
   font-size: 2.2rem;
   margin-bottom: 15px;
   font-weight: bold;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  text-shadow: none;
 }
 
 .book-authors {
@@ -545,32 +574,34 @@
 
 /* Audio Player - Modern Design */
 .audio-player {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, #820d2c 0%, #6b0b24 100%);
   border-radius: 20px;
   padding: 35px;
   margin-bottom: 40px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 10px 30px rgba(130, 13, 44, 0.3);
+  border: none;
 }
 
 .current-audio-info {
   text-align: center;
   margin-bottom: 30px;
   padding: 20px;
-  background: white;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .current-audio-info h3 {
-  color: #333;
+  color: #f8e7c9;
   font-size: 1.6rem;
   margin-bottom: 10px;
   font-weight: bold;
 }
 
 .current-audio-info p {
-  color: #666;
+  color: rgba(248, 231, 201, 0.8);
   font-size: 1rem;
   margin: 0;
   font-weight: 500;
@@ -605,15 +636,15 @@
 }
 
 .btn-control {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: rgba(255, 255, 255, 0.2);
+  color: #f8e7c9;
   width: 50px;
   height: 50px;
   font-size: 1.3rem;
 }
 
 .btn-control:hover {
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .btn-control:disabled {
@@ -624,15 +655,16 @@
 }
 
 .btn-play {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
+  background: #d4af7a;
+  color: #820d2c;
   width: 80px;
   height: 80px;
   font-size: 2rem;
 }
 
 .btn-play:hover {
-  background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+  background: #f8e7c9;
+  transform: scale(1.05);
 }
 
 .btn-small {
@@ -682,7 +714,7 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  background: #d4af7a;
   transition: width 0.1s ease;
   position: relative;
 }
@@ -696,27 +728,28 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #764ba2;
-  border: 3px solid white;
+  background: #820d2c;
+  border: 3px solid #d4af7a;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
 }
 
 /* Audio List - Redesigned */
 .audio-list {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: #fff8f0;
   border-radius: 20px;
   padding: 35px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f8e7c9;
 }
 
 .audio-list h3 {
-  color: #333;
+  color: #820d2c;
   font-size: 1.8rem;
   margin-bottom: 25px;
   text-align: center;
   font-weight: bold;
   padding-bottom: 15px;
-  border-bottom: 3px solid #667eea;
+  border-bottom: 3px solid #d4af7a;
 }
 
 .audio-items {
@@ -727,7 +760,7 @@
 
 .audio-item {
   background: white;
-  border: 3px solid #e0e0e0;
+  border: 1px solid #e0e0e0;
   border-radius: 15px;
   padding: 20px;
   cursor: pointer;
@@ -735,17 +768,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
   position: relative;
   overflow: hidden;
 }
 
-.audio-item > * {
+.audio-item>* {
   position: relative;
   z-index: 2;
 }
 
-.audio-item > *:not(.btn-small) {
+.audio-item>*:not(.btn-small) {
   color: #333 !important;
 }
 
@@ -756,7 +789,7 @@
   top: 0;
   bottom: 0;
   width: 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #820d2c 0%, #6b0b24 100%);
   transition: width 0.3s ease;
   z-index: 1;
 }
@@ -772,15 +805,15 @@
 }
 
 .audio-item.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-color: #764ba2;
+  background: linear-gradient(135deg, #820d2c 0%, #6b0b24 100%);
+  border-color: #820d2c;
   box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
   transform: translateY(-3px) scale(1.02);
 }
 
 .audio-item.active .audio-term,
 .audio-item.active .audio-play-count {
-  color: white !important;
+  color: #f8e7c9 !important;
   opacity: 1 !important;
 }
 
@@ -810,11 +843,11 @@
   .qr-scanner-page .container {
     max-width: 1400px;
   }
-  
+
   .qr-scanner-page .form-card {
     max-width: 450px;
   }
-  
+
   .qr-scanner-page .audio-items {
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   }
@@ -826,25 +859,25 @@
     grid-template-columns: 1fr;
     gap: 25px;
   }
-  
+
   .qr-scanner-page {
     padding: 15px;
   }
-  
+
   .qr-scanner-page .form-card {
     max-width: 500px;
     margin: 0 auto;
   }
-  
+
   .qr-scanner-page .promo-banner {
     min-height: 280px;
   }
-  
+
   .qr-scanner-page .audio-items {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 15px;
   }
-  
+
   .qr-scanner-page .audio-section {
     padding: 30px;
   }
@@ -855,115 +888,115 @@
   .qr-scanner-page {
     padding: 10px;
   }
-  
+
   .qr-scanner-page .main-content {
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  
+
   .qr-scanner-page .form-card {
     padding: 25px 20px;
     max-width: 100%;
   }
-  
+
   .qr-scanner-page .form-title {
     font-size: 1.5rem;
   }
-  
+
   .qr-scanner-page .promo-banner {
     padding: 20px;
     min-height: 250px;
   }
-  
+
   .qr-scanner-page .promo-content {
     flex-direction: column;
     gap: 15px;
     text-align: center;
   }
-  
+
   .qr-scanner-page .cartoon-character {
     font-size: 60px;
   }
-  
+
   .qr-scanner-page .book-now-btn {
     padding: 12px 20px;
     font-size: 14px;
   }
-  
+
   .qr-scanner-page .phone-btn {
     padding: 15px 25px;
     font-size: 20px;
   }
-  
+
   .qr-scanner-page .camera-popup {
     margin: 10px;
     padding: 20px;
     width: calc(100% - 20px);
   }
-  
+
   .qr-scanner-page .camera-video {
     height: 250px;
   }
-  
+
   .qr-scanner-page .scanner-frame {
     width: 150px;
     height: 150px;
   }
-  
+
   .qr-scanner-page .scanner-instruction {
     font-size: 1rem;
     padding: 8px 15px;
   }
-  
+
   .qr-scanner-page .audio-section {
     padding: 25px 20px;
   }
-  
+
   .qr-scanner-page .audio-player {
     padding: 25px 20px;
   }
-  
+
   .qr-scanner-page .audio-list {
     padding: 25px 20px;
   }
-  
+
   .qr-scanner-page .audio-controls {
     gap: 10px;
   }
-  
+
   .qr-scanner-page .btn-play {
     width: 70px;
     height: 70px;
     font-size: 1.8rem;
   }
-  
+
   .qr-scanner-page .btn-control {
     width: 45px;
     height: 45px;
     font-size: 1.2rem;
   }
-  
+
   .qr-scanner-page .audio-items {
     grid-template-columns: 1fr;
     gap: 12px;
   }
-  
+
   .qr-scanner-page .audio-item {
     padding: 15px;
   }
-  
+
   .qr-scanner-page .book-info {
     padding: 25px 20px;
   }
-  
+
   .qr-scanner-page .book-info h2 {
     font-size: 1.6rem;
   }
-  
+
   .qr-scanner-page .book-authors {
     font-size: 1.1rem;
   }
-  
+
   .qr-scanner-page .book-description {
     font-size: 1rem;
   }
@@ -974,108 +1007,108 @@
   .qr-scanner-page {
     padding: 8px;
   }
-  
+
   .qr-scanner-page .container {
     padding: 0;
   }
-  
+
   .qr-scanner-page .form-card {
     padding: 20px 15px;
     border-radius: 12px;
   }
-  
+
   .qr-scanner-page .form-title {
     font-size: 1.4rem;
     margin-bottom: 20px;
   }
-  
+
   .qr-scanner-page .scan-btn {
     padding: 12px 25px;
     font-size: 14px;
   }
-  
+
   .qr-scanner-page .promo-banner {
     padding: 15px;
     min-height: 200px;
   }
-  
+
   .qr-scanner-page .book-now-btn {
     padding: 10px 15px;
     font-size: 13px;
     border-radius: 20px;
   }
-  
+
   .qr-scanner-page .phone-btn {
     padding: 12px 20px;
     font-size: 18px;
   }
-  
+
   .qr-scanner-page .cartoon-character {
     font-size: 50px;
   }
-  
+
   .qr-scanner-page .camera-popup {
     margin: 5px;
     padding: 15px;
     border-radius: 15px;
   }
-  
+
   .qr-scanner-page .popup-header h3 {
     font-size: 1.3rem;
   }
-  
+
   .camera-video {
     height: 220px;
   }
-  
+
   .scanner-frame {
     width: 130px;
     height: 130px;
   }
-  
+
   .audio-section {
     padding: 20px 15px;
     border-radius: 15px;
   }
-  
+
   .audio-player {
     padding: 20px 15px;
     border-radius: 15px;
   }
-  
+
   .audio-list {
     padding: 20px 15px;
     border-radius: 15px;
   }
-  
+
   .audio-progress {
     gap: 10px;
     padding: 12px;
   }
-  
+
   .time {
     font-size: 0.9rem;
     min-width: 40px;
   }
-  
+
   .progress-bar {
     height: 10px;
   }
-  
+
   .book-info {
     padding: 20px 15px;
   }
-  
+
   .book-info h2 {
     font-size: 1.4rem;
     margin-bottom: 12px;
   }
-  
+
   .book-authors {
     font-size: 1rem;
     margin-bottom: 12px;
   }
-  
+
   .book-description {
     font-size: 0.95rem;
     margin-bottom: 15px;
@@ -1088,62 +1121,62 @@
     padding: 5px;
     min-height: 40vh;
   }
-  
+
   .form-card {
     padding: 18px 12px;
     border-radius: 10px;
   }
-  
+
   .form-title {
     font-size: 1.3rem;
     margin-bottom: 18px;
   }
-  
+
   .qr-input,
   .phone-input {
     padding: 12px;
     font-size: 14px;
   }
-  
+
   .scan-btn {
     padding: 12px 20px;
     font-size: 13px;
   }
-  
+
   .note-section h4 {
     font-size: 14px;
   }
-  
+
   .note-section p {
     font-size: 13px;
   }
-  
+
   .promo-banner {
     padding: 12px;
     min-height: 180px;
     border-radius: 12px;
   }
-  
+
   .book-now-btn {
     padding: 8px 12px;
     font-size: 12px;
     gap: 5px;
   }
-  
+
   .phone-btn {
     padding: 10px 15px;
     font-size: 16px;
   }
-  
+
   .hot-badge {
     font-size: 9px;
     padding: 3px 6px;
   }
-  
+
   .cartoon-character {
     font-size: 40px;
   }
-  
+
   .camera-popup {
     margin: 0;
     padding: 12px;
@@ -1153,131 +1186,131 @@
     display: flex;
     flex-direction: column;
   }
-  
+
   .popup-header h3 {
     font-size: 1.2rem;
   }
-  
+
   .camera-container {
     flex: 1;
     margin-bottom: 15px;
   }
-  
+
   .camera-video {
     height: 100%;
     min-height: 200px;
   }
-  
+
   .scanner-frame {
     width: 120px;
     height: 120px;
   }
-  
+
   .scanner-instruction {
     font-size: 0.9rem;
     padding: 6px 12px;
   }
-  
+
   .audio-section {
     padding: 15px 10px;
     margin-top: 20px;
   }
-  
+
   .audio-player {
     padding: 15px 10px;
   }
-  
+
   .audio-list {
     padding: 15px 10px;
   }
-  
+
   .audio-list h3 {
     font-size: 1.4rem;
     margin-bottom: 15px;
   }
-  
+
   .btn-play {
     width: 60px;
     height: 60px;
     font-size: 1.5rem;
   }
-  
+
   .btn-control {
     width: 40px;
     height: 40px;
     font-size: 1.1rem;
   }
-  
+
   .audio-controls {
     gap: 8px;
   }
-  
+
   .audio-progress {
     gap: 8px;
     padding: 10px;
   }
-  
+
   .time {
     font-size: 0.8rem;
     min-width: 35px;
   }
-  
+
   .progress-bar {
     height: 8px;
   }
-  
+
   .audio-item {
     padding: 12px;
     border-radius: 12px;
   }
-  
+
   .audio-term {
     font-size: 1.1rem;
   }
-  
+
   .audio-play-count {
     font-size: 0.9rem;
   }
-  
+
   .btn-small {
     padding: 6px 10px;
     font-size: 0.8rem;
   }
-  
+
   .book-info {
     padding: 15px 10px;
   }
-  
+
   .book-info h2 {
     font-size: 1.3rem;
     margin-bottom: 10px;
   }
-  
+
   .book-authors {
     font-size: 0.9rem;
     margin-bottom: 10px;
   }
-  
+
   .book-description {
     font-size: 0.9rem;
     margin-bottom: 12px;
     line-height: 1.6;
   }
-  
+
   .audio-count {
     padding: 8px 15px;
     font-size: 0.9rem;
   }
-  
+
   .current-audio-info {
     padding: 15px;
   }
-  
+
   .current-audio-info h3 {
     font-size: 1.3rem;
     margin-bottom: 8px;
   }
-  
+
   .current-audio-info p {
     font-size: 0.9rem;
   }
@@ -1288,51 +1321,51 @@
   .form-card {
     padding: 15px 10px;
   }
-  
+
   .form-title {
     font-size: 1.2rem;
   }
-  
+
   .promo-banner {
     padding: 10px;
     min-height: 160px;
   }
-  
+
   .book-now-btn {
     font-size: 11px;
     padding: 6px 10px;
   }
-  
+
   .phone-btn {
     font-size: 14px;
     padding: 8px 12px;
   }
-  
+
   .cartoon-character {
     font-size: 35px;
   }
-  
+
   .btn-play {
     width: 55px;
     height: 55px;
     font-size: 1.3rem;
   }
-  
+
   .btn-control {
     width: 35px;
     height: 35px;
     font-size: 1rem;
   }
-  
+
   .scanner-frame {
     width: 100px;
     height: 100px;
   }
-  
+
   .book-info h2 {
     font-size: 1.2rem;
   }
-  
+
   .audio-list h3 {
     font-size: 1.3rem;
   }
@@ -1344,20 +1377,20 @@
     height: 100vh;
     overflow-y: auto;
   }
-  
+
   .camera-video {
     height: 200px;
   }
-  
+
   .scanner-frame {
     width: 100px;
     height: 100px;
   }
-  
+
   .audio-section {
     padding: 15px;
   }
-  
+
   .audio-player {
     padding: 15px;
   }

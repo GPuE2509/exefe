@@ -11,7 +11,7 @@ const validateEmail = (email) => /\S+@\S+\.\S+/.test(email);
 const AuthPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   // Set initial state based on the current route
   const [isActive, setIsActive] = useState(location.pathname === '/register');
   const [showPassword, setShowPassword] = useState(false);
@@ -55,25 +55,25 @@ const AuthPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
-    
+
     if (!email || !password) {
-      toast.error("Vui lòng nhập đầy đủ email và mật khẩu");
+      toast.error("Please enter email and password");
       return;
     }
     if (!validateEmail(email)) {
-      toast.error("Định dạng email không hợp lệ");
+      toast.error("Invalid email format");
       return;
     }
-    
+
     setLoading(true);
-    
+
     try {
       const result = await authService.login({ email, password });
-      
+
       if (result.success) {
-        toast.success("Đăng nhập thành công!");
+        toast.success("Login successful!");
         const from = location.state?.from?.pathname || '/';
-        
+
         if (authService.isAdmin()) {
           navigate('/admin', { replace: true });
         } else {
@@ -84,8 +84,8 @@ const AuthPage = () => {
         toast.error(result.message);
       }
     } catch (error) {
-      setError('Đã xảy ra lỗi khi đăng nhập');
-      toast.error('Đã xảy ra lỗi khi đăng nhập');
+      setError('An error occurred during login');
+      toast.error('An error occurred during login');
     } finally {
       setLoading(false);
     }
@@ -94,32 +94,32 @@ const AuthPage = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     setError('');
-    
+
     if (!fullName || !phone || !email || !password || !confirmPassword) {
-      toast.error("Vui lòng nhập đầy đủ thông tin");
+      toast.error("Please enter all information");
       return;
     }
     if (!validateEmail(email)) {
-      toast.error("Định dạng email không hợp lệ");
+      toast.error("Invalid email format");
       return;
     }
     if (!/^\d{10}$/.test(phone)) {
-      toast.error("Số điện thoại phải gồm 10 chữ số");
+      toast.error("Phone number must be 10 digits");
       return;
     }
     if (password !== confirmPassword) {
-      toast.error("Mật khẩu xác nhận không khớp");
+      toast.error("Passwords do not match");
       return;
     }
-    
+
     setLoading(true);
-    
+
     try {
       const result = await authService.register({ fullName, email, phone, password });
-      
+
       if (result.success) {
-        toast.success("Tạo tài khoản thành công! Vui lòng đăng nhập.");
-        setIsActive(false); // chuyển về form đăng nhập
+        toast.success("Account created successfully! Please login.");
+        setIsActive(false); // Switch to login form
         // Reset form
         setFullName("");
         setPhone("");
@@ -131,8 +131,8 @@ const AuthPage = () => {
         toast.error(result.message);
       }
     } catch (error) {
-      setError('Đã xảy ra lỗi khi đăng ký');
-      toast.error('Đã xảy ra lỗi khi đăng ký');
+      setError('An error occurred during registration');
+      toast.error('An error occurred during registration');
     } finally {
       setLoading(false);
     }
@@ -141,14 +141,14 @@ const AuthPage = () => {
   const handleForgotSubmit = (e) => {
     e.preventDefault();
     if (!email) {
-      toast.error("Vui lòng nhập email");
+      toast.error("Please enter email");
       return;
     }
     if (!validateEmail(email)) {
-      toast.error("Định dạng email không hợp lệ");
+      toast.error("Invalid email format");
       return;
     }
-    toast.success("Yêu cầu đặt lại mật khẩu đã được gửi");
+    toast.success("Password reset request sent");
   };
 
   const handleForgotPasswordClick = () => {
@@ -162,36 +162,78 @@ const AuthPage = () => {
   return (
     <div className="page-wrapper">
       <div className={`container-auth ${isActive ? "active" : ""}`}>
-      {isForgotPassword ? (
-        <div className="form-box forgot-password">
-          <form onSubmit={handleForgotSubmit}>
-            <h1>QUÊN MẬT KHẨU</h1>
-            <div className="input-box">
-              <input 
-                type="text" 
-                placeholder="Nhập email của bạn"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <i className="bx bxs-envelope"></i>
-            </div>
-            <button type="submit" className="btn-auth">
-              Gửi yêu cầu
-            </button>
-            <div className="forgot-link">
-              <a href="#" onClick={handleBackToLoginClick}>
-                Quay lại trang đăng nhập
-              </a>
-            </div>
-          </form>
-        </div>
-      ) : (
-        <div className="form-box login">
-          <form onSubmit={handleLogin}>
-            <h1>ĐĂNG NHẬP</h1>
+        {isForgotPassword ? (
+          <div className="form-box forgot-password">
+            <form onSubmit={handleForgotSubmit}>
+              <h1>FORGOT PASSWORD</h1>
+              <div className="input-box">
+                <input
+                  type="text"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <i className="bx bxs-envelope"></i>
+              </div>
+              <button type="submit" className="btn-auth">
+                Send Request
+              </button>
+              <div className="forgot-link">
+                <a href="#" onClick={handleBackToLoginClick}>
+                  Back to Login
+                </a>
+              </div>
+            </form>
+          </div>
+        ) : (
+          <div className="form-box login">
+            <form onSubmit={handleLogin}>
+              <h1>LOGIN</h1>
+              <div className="input-box">
+                <input
+                  type="text"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="input-box">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <span className="password-toggle" onClick={togglePasswordVisibility}>
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+              </div>
+              <button type="submit" className="btn-auth" disabled={loading}>
+                {loading ? "Logging in..." : "Login"}
+              </button>
+              <div className="forgot-link">
+                <a href="#" onClick={handleForgotPasswordClick}>
+                  Forgot Password?
+                </a>
+              </div>
+            </form>
+          </div>
+        )}
+
+        <div className="form-box register">
+          <form onSubmit={handleRegister}>
+            <h1>REGISTER</h1>
             <div className="input-box">
               <input
                 type="text"
+                placeholder="Full Name"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+              />
+            </div>
+            <div className="input-box">
+              <input
+                type="email"
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -199,8 +241,18 @@ const AuthPage = () => {
             </div>
             <div className="input-box">
               <input
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                placeholder="Phone Number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ""))}
+              />
+            </div>
+            <div className="input-box">
+              <input
                 type={showPassword ? "text" : "password"}
-                placeholder="Mật khẩu"
+                placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -208,91 +260,39 @@ const AuthPage = () => {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
-            <button type="submit" className="btn-auth" disabled={loading}>
-              {loading ? "Đang đăng nhập..." : "Đăng nhập"}
-            </button>
-            <div className="forgot-link">
-              <a href="#" onClick={handleForgotPasswordClick}>
-                Quên mật khẩu?
-              </a>
+            <div className="input-box">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <span className="password-toggle" onClick={togglePasswordVisibility}>
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
             </div>
+            <button type="submit" className="btn-auth" disabled={loading}>
+              {loading ? "Registering..." : "Register"}
+            </button>
           </form>
         </div>
-      )}
 
-      <div className="form-box register">
-        <form onSubmit={handleRegister}>
-          <h1>ĐĂNG KÝ</h1>
-          <div className="input-box">
-            <input 
-              type="text" 
-              placeholder="Họ và tên" 
-              value={fullName} 
-              onChange={(e) => setFullName(e.target.value)}  
-            />
+        <div className="toggle-box">
+          <div className="toggle-panel toggle-left">
+            <h1>Welcome Back!</h1>
+            <p>Don't have an account?</p>
+            <button className="btn-auth" onClick={handleRegisterClick}>
+              Register
+            </button>
           </div>
-          <div className="input-box">
-            <input 
-              type="email" 
-              placeholder="Email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)}  
-            />
+          <div className="toggle-panel toggle-right">
+            <h1>Hello, Friend!</h1>
+            <p>Already have an account?</p>
+            <button className="btn-auth" onClick={handleLoginClick}>
+              Login
+            </button>
           </div>
-          <div className="input-box">
-            <input 
-              type="tel" 
-              inputMode="numeric" 
-              pattern="[0-9]*" 
-              placeholder="Số điện thoại" 
-              value={phone} 
-              onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ""))}  
-            />
-          </div>
-          <div className="input-box">
-            <input 
-              type={showPassword ? "text" : "password"} 
-              placeholder="Mật khẩu" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)}  
-            />
-            <span className="password-toggle" onClick={togglePasswordVisibility}>
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </span>
-          </div>
-          <div className="input-box">
-            <input 
-              type={showPassword ? "text" : "password"} 
-              placeholder="Xác nhận mật khẩu" 
-              value={confirmPassword} 
-              onChange={(e) => setConfirmPassword(e.target.value)}  
-            />
-            <span className="password-toggle" onClick={togglePasswordVisibility}>
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </span>
-          </div>
-          <button type="submit" className="btn-auth" disabled={loading}>
-            {loading ? "Đang đăng ký..." : "Đăng ký"}
-          </button>
-        </form>
-      </div>
-
-      <div className="toggle-box">
-        <div className="toggle-panel toggle-left">
-          <h1>Chào mừng bạn!</h1>
-          <p>Chưa có tài khoản?</p>
-          <button className="btn-auth" onClick={handleRegisterClick}>
-            Đăng ký
-          </button>
         </div>
-        <div className="toggle-panel toggle-right">
-          <h1>Chào mừng trở lại!</h1>
-          <p>Bạn đã có tài khoản?</p>
-          <button className="btn-auth" onClick={handleLoginClick}>
-            Đăng nhập
-          </button>
-        </div>
-      </div>
       </div>
     </div>
   );

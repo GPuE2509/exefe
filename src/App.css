@@ -17,6 +17,15 @@
 .main-content {
     flex: 1;
     width: 100%;
+    padding-top: 180px;
+    /* Approximate height of full header */
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding-top: 80px;
+        /* Approximate height of mobile header */
+    }
 }
 
 /* Global Styles */
@@ -98,12 +107,12 @@ body {
     .container {
         padding: 0 15px;
     }
-    
+
     .btn {
         padding: 10px 20px;
         font-size: 14px;
     }
-    
+
     .card {
         padding: 15px;
     }

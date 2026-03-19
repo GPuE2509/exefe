@@ -7,28 +7,28 @@ export const authService = {
   login: async (credentials) => {
     try {
       const response = await apiClient.post(API_CONFIG.ENDPOINTS.AUTH.LOGIN, credentials);
-      
+
       if (response.success && response.data.token) {
         // Lưu token và thông tin user vào localStorage
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
         localStorage.setItem('email', response.data.user.email);
-        
+
         return {
           success: true,
           data: response.data
         };
       }
-      
+
       return {
         success: false,
-        message: response.message || 'Đăng nhập thất bại'
+        message: response.message || 'Login failed'
       };
     } catch (error) {
       console.error('Login error:', error);
       return {
         success: false,
-        message: error.response?.data?.message || 'Lỗi kết nối server'
+        message: error.response?.data?.message || 'Server connection error'
       };
     }
   },
@@ -37,7 +37,7 @@ export const authService = {
   register: async (userData) => {
     try {
       const response = await apiClient.post(API_CONFIG.ENDPOINTS.AUTH.REGISTER, userData);
-      
+
       if (response.success) {
         return {
           success: true,
@@ -45,16 +45,16 @@ export const authService = {
           message: response.message
         };
       }
-      
+
       return {
         success: false,
-        message: response.message || 'Đăng ký thất bại'
+        message: response.message || 'Registration failed'
       };
     } catch (error) {
       console.error('Register error:', error);
       return {
         success: false,
-        message: error.response?.data?.message || 'Lỗi kết nối server'
+        message: error.response?.data?.message || 'Server connection error'
       };
     }
   },
@@ -111,7 +111,7 @@ export const authService = {
       console.error('Get profile error:', error);
       return {
         success: false,
-        message: error.response?.data?.message || 'Lỗi khi lấy thông tin profile'
+        message: error.response?.data?.message || 'Error fetching profile'
       };
     }
   },
@@ -129,7 +129,7 @@ export const authService = {
       console.error('Update profile error:', error);
       return {
         success: false,
-        message: error.response?.data?.message || 'Lỗi khi cập nhật profile'
+        message: error.response?.data?.message || 'Error updating profile'
       };
     }
   }

@@ -15,7 +15,7 @@ const AdminNotFoundPage = () => {
   };
 
   return (
-    <div style={{ 
+    <div style={{
       padding: '40px',
       minHeight: '60vh',
       display: 'flex',
@@ -28,30 +28,30 @@ const AdminNotFoundPage = () => {
         subTitle={
           <div>
             <p style={{ fontSize: '16px', marginBottom: '8px' }}>
-              Trang quản trị bạn đang tìm kiếm không tồn tại.
+              The admin page you are looking for does not exist.
             </p>
             <p style={{ fontSize: '14px', color: '#666' }}>
-              Vui lòng kiểm tra lại đường dẫn hoặc sử dụng menu điều hướng.
+              Please check the URL or use the navigation menu.
             </p>
           </div>
         }
         extra={
           <div style={{ marginTop: '20px' }}>
-            <Button 
-              type="primary" 
+            <Button
+              type="primary"
               icon={<HomeOutlined />}
               onClick={handleGoHome}
               size="large"
               style={{ marginRight: '12px' }}
             >
-              Về trang chủ Admin
+              Back to Admin Home
             </Button>
-            <Button 
+            <Button
               icon={<ArrowLeftOutlined />}
               onClick={handleGoBack}
               size="large"
             >
-              Quay lại
+              Go Back
             </Button>
           </div>
         }

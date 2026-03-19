@@ -42,14 +42,14 @@ const GenreManagementPage = () => {
     try {
       setLoading(true);
       const response = await adminGenresService.getGenres();
-      
+
       if (response.success) {
         setGenres(response.data?.genres || []);
       } else {
-        message.error(response.message || 'Lỗi khi tải danh sách thể loại');
+        message.error(response.message || 'Error fetching genre list');
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Lỗi khi tải danh sách thể loại';
+      const errorMessage = error.response?.data?.message || error.message || 'Error fetching genre list';
       message.error(errorMessage);
       console.error('Error fetching genres:', error);
     } finally {
@@ -78,15 +78,15 @@ const GenreManagementPage = () => {
     try {
       setDeleteLoading(true);
       const response = await adminGenresService.deleteGenre(genreId);
-      
+
       if (response.success) {
-        message.success(response.message || 'Xóa thể loại thành công');
+        message.success(response.message || 'Genre deleted successfully');
         fetchGenres();
       } else {
-        message.error(response.message || 'Lỗi khi xóa thể loại');
+        message.error(response.message || 'Error deleting genre');
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Lỗi khi xóa thể loại';
+      const errorMessage = error.response?.data?.message || error.message || 'Error deleting genre';
       message.error(errorMessage);
       console.error('Error deleting genre:', error);
     } finally {
@@ -105,14 +105,14 @@ const GenreManagementPage = () => {
       }
 
       if (response.success) {
-        message.success(response.message || (editingGenre ? 'Cập nhật thể loại thành công' : 'Thêm thể loại thành công'));
+        message.success(response.message || (editingGenre ? 'Genre updated successfully' : 'Genre created successfully'));
         setModalVisible(false);
         fetchGenres();
       } else {
-        message.error(response.message || (editingGenre ? 'Lỗi khi cập nhật thể loại' : 'Lỗi khi thêm thể loại'));
+        message.error(response.message || (editingGenre ? 'Error updating genre' : 'Error adding genre'));
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || (editingGenre ? 'Lỗi khi cập nhật thể loại' : 'Lỗi khi thêm thể loại');
+      const errorMessage = error.response?.data?.message || error.message || (editingGenre ? 'Error updating genre' : 'Error adding genre');
       message.error(errorMessage);
       console.error('Error saving genre:', error);
     } finally {
@@ -122,7 +122,7 @@ const GenreManagementPage = () => {
 
   const columns = [
     {
-      title: 'Tên thể loại',
+      title: 'Genre Name',
       dataIndex: 'name',
       key: 'name',
       render: (name) => (
@@ -130,29 +130,29 @@ const GenreManagementPage = () => {
       ),
     },
     {
-      title: 'Mô tả',
+      title: 'Description',
       dataIndex: 'description',
       key: 'description',
       ellipsis: true,
     },
     {
-      title: 'Trạng thái',
+      title: 'Status',
       dataIndex: 'isActive',
       key: 'isActive',
       render: (isActive) => (
         <Tag color={isActive ? 'green' : 'red'}>
-          {isActive ? 'Hoạt động' : 'Không hoạt động'}
+          {isActive ? 'Active' : 'Inactive'}
         </Tag>
       ),
     },
     {
-      title: 'Ngày tạo',
+      title: 'Created At',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: (date) => new Date(date).toLocaleDateString('vi-VN'),
+      render: (date) => new Date(date).toLocaleDateString('en-US'),
     },
     {
-      title: 'Thao tác',
+      title: 'Actions',
       key: 'actions',
       render: (_, record) => (
         <Space size="small">
@@ -161,21 +161,21 @@ const GenreManagementPage = () => {
             size="small"
             onClick={() => handleEditGenre(record)}
           >
-            Sửa
+            Edit
           </Button>
           <Popconfirm
-            title="Bạn có chắc muốn xóa thể loại này?"
-            description="Việc này có thể ảnh hưởng đến các sách thuộc thể loại này."
+            title="Are you sure you want to delete this genre?"
+            description="This may affect books belonging to this genre."
             onConfirm={() => handleDeleteGenre(record._id)}
-            okText="Xóa"
-            cancelText="Hủy"
+            okText="Delete"
+            cancelText="Cancel"
           >
             <Button
               danger
               icon={<DeleteOutlined />}
               size="small"
             >
-              Xóa
+              Delete
             </Button>
           </Popconfirm>
         </Space>
@@ -189,7 +189,7 @@ const GenreManagementPage = () => {
         <Row justify="space-between" align="middle" style={{ marginBottom: '16px' }}>
           <Col>
             <Title level={2} style={{ margin: 0 }}>
-              Quản lý thể loại
+              Genre Management
             </Title>
           </Col>
           <Col>
@@ -198,28 +198,28 @@ const GenreManagementPage = () => {
               icon={<PlusOutlined />}
               onClick={handleAddGenre}
             >
-              Thêm thể loại mới
+              Add New Genre
             </Button>
           </Col>
         </Row>
 
-         <Table
-           columns={columns}
-           dataSource={genres || []}
-           rowKey="_id"
-           loading={loading}
-           pagination={{
-             pageSize: 10,
-             showSizeChanger: true,
-             showQuickJumper: true,
-             showTotal: (total, range) =>
-               `${range[0]}-${range[1]} của ${total} thể loại`,
-           }}
-         />
+        <Table
+          columns={columns}
+          dataSource={genres || []}
+          rowKey="_id"
+          loading={loading}
+          pagination={{
+            pageSize: 10,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} genres`,
+          }}
+        />
       </Card>
 
       <Modal
-        title={editingGenre ? 'Chỉnh sửa thể loại' : 'Thêm thể loại mới'}
+        title={editingGenre ? 'Edit Genre' : 'Add New Genre'}
         open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={null}
@@ -234,21 +234,21 @@ const GenreManagementPage = () => {
             <Col span={12}>
               <Form.Item
                 name="code"
-                label="Mã thể loại"
-                rules={[{ required: true, message: 'Vui lòng nhập mã thể loại' }]}
+                label="Genre Code"
+                rules={[{ required: true, message: 'Please enter genre code' }]}
               >
-                <Input placeholder="Nhập mã thể loại" />
+                <Input placeholder="Enter genre code" />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
                 name="sortOrder"
-                label="Thứ tự sắp xếp"
-                rules={[{ required: true, message: 'Vui lòng nhập thứ tự sắp xếp' }]}
+                label="Sort Order"
+                rules={[{ required: true, message: 'Please enter sort order' }]}
               >
                 <InputNumber
                   style={{ width: '100%' }}
-                  placeholder="Nhập thứ tự"
+                  placeholder="Enter order"
                   min={1}
                 />
               </Form.Item>
@@ -257,29 +257,29 @@ const GenreManagementPage = () => {
 
           <Form.Item
             name="name"
-            label="Tên thể loại"
-            rules={[{ required: true, message: 'Vui lòng nhập tên thể loại' }]}
+            label="Genre Name"
+            rules={[{ required: true, message: 'Please enter genre name' }]}
           >
-            <Input placeholder="Nhập tên thể loại" />
+            <Input placeholder="Enter genre name" />
           </Form.Item>
 
           <Form.Item
             name="description"
-            label="Mô tả"
+            label="Description"
           >
             <Input.TextArea
               rows={3}
-              placeholder="Nhập mô tả thể loại"
+              placeholder="Enter genre description"
             />
           </Form.Item>
 
           <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
             <Space>
               <Button onClick={() => setModalVisible(false)}>
-                Hủy
+                Cancel
               </Button>
               <Button type="primary" htmlType="submit">
-                {editingGenre ? 'Cập nhật' : 'Thêm mới'}
+                {editingGenre ? 'Update' : 'Create'}
               </Button>
             </Space>
           </Form.Item>
@@ -287,16 +287,16 @@ const GenreManagementPage = () => {
       </Modal>
 
       {/* Loading Modals */}
-      <LoadingModal 
+      <LoadingModal
         visible={submitLoading}
-        message={editingGenre ? 'Đang cập nhật thể loại...' : 'Đang thêm thể loại mới...'}
-        tip="Vui lòng đợi trong giây lát"
+        message={editingGenre ? 'Updating genre...' : 'Adding new genre...'}
+        tip="Please wait a moment"
       />
-      
-      <LoadingModal 
+
+      <LoadingModal
         visible={deleteLoading}
-        message="Đang xóa thể loại..."
-        tip="Vui lòng đợi trong giây lát"
+        message="Deleting genre..."
+        tip="Please wait a moment"
       />
     </div>
   );
