@@ -49,7 +49,7 @@ const QRScannerPage = () => {
     setError(null);
 
     try {
-      const response = await fetch(`http://localhost:3000/api/books/qr/${qrToken}`);
+      const response = await fetch(`https://essgenius-be.onrender.com/api/books/qr/${qrToken}`);
       const data = await response.json();
 
       if (data.success) {
@@ -207,7 +207,7 @@ const QRScannerPage = () => {
                   <h4>Note:</h4>
                   <p>• Ensure camera permission is granted</p>
                   <p>• Point camera at the QR code on the book</p>
-                  <p>• Contact support: 1900 7070 or 1900 969 681</p>
+                  <p>• Contact support: 0918575408</p>
                 </div>
               </div>
             </div>
@@ -230,7 +230,7 @@ const QRScannerPage = () => {
                   </button>
 
                   <button className="phone-btn">
-                    1900 0152
+                    0918575408
                   </button>
                 </div>
 
@@ -254,7 +254,7 @@ const QRScannerPage = () => {
               <div className="camera-container">
                 <video ref={videoRef} className="camera-video"></video>
                 <div className="scanner-overlay">
-                  <div className="scanner-frame"></div>
+  
                   <p className="scanner-instruction">Point camera at the QR code on the book</p>
                 </div>
               </div>

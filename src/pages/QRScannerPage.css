@@ -1,12 +1,20 @@
 /* QR Scanner Page - Modern Design */
+html, body {
+  overflow-x: hidden;
+}
+
 .qr-scanner-page {
   min-height: 80vh;
   padding: 40px 20px;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Main Content Layout */
@@ -260,6 +268,8 @@
   align-items: center;
   z-index: 1000;
   padding: 20px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .camera-popup {
@@ -267,18 +277,16 @@
   border-radius: 20px;
   padding: 0;
   max-width: 500px;
-  width: 100%;
+  width: calc(100% - 20px);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .popup-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 2px solid #eee;
   background: #820d2c;
   padding: 20px;
   margin: 0;
@@ -313,10 +321,7 @@
 
 .camera-container {
   position: relative;
-  border-radius: 15px;
   overflow: hidden;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin: 0;
   border-radius: 0;
   box-shadow: none;
@@ -324,9 +329,9 @@
 
 .camera-video {
   width: 100%;
-  height: 300px;
+  height: 400px;
   object-fit: cover;
-  background: #f0f0f0;
+  background: #000;
 }
 
 .scanner-overlay {
@@ -340,6 +345,7 @@
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.3);
+  gap: 10px;
 }
 
 .scanner-frame {
@@ -395,19 +401,23 @@
 
 .scanner-instruction {
   color: white;
-  font-size: 1.1rem;
-  margin-top: 20px;
+  font-size: 0.95rem;
+  margin: 0;
   text-align: center;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 10px 20px;
-  border-radius: 25px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 8px 16px;
+  border-radius: 20px;
 }
 
 .popup-controls {
   display: flex;
   justify-content: center;
+  align-items: center;
   padding: 20px;
-  background: white;
+  background: #f8e7c9;
+  gap: 10px;
+  margin: 0;
+  border: none;
 }
 
 .stop-btn {
@@ -440,6 +450,9 @@
   justify-content: center;
   align-items: center;
   z-index: 1001;
+  padding: 20px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .loading-container {
@@ -448,6 +461,9 @@
   padding: 40px;
   text-align: center;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
 }
 
 .spinner {
@@ -482,6 +498,9 @@
   justify-content: center;
   align-items: center;
   z-index: 1001;
+  padding: 20px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .error-container {
@@ -490,6 +509,9 @@
   padding: 40px;
   text-align: center;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
 }
 
 .error-message {
@@ -766,11 +788,15 @@
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
   position: relative;
   overflow: hidden;
+  gap: 10px;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .audio-item>* {
@@ -827,6 +853,9 @@
   font-size: 1.2rem;
   margin-bottom: 5px;
   color: #333 !important;
+  word-break: break-word;
+  flex: 1 1 auto;
+  min-width: 100px;
 }
 
 .audio-play-count {
@@ -834,6 +863,9 @@
   opacity: 0.8;
   font-weight: 500;
   color: #666 !important;
+  word-break: break-word;
+  flex: 1 1 auto;
+  min-width: 80px;
 }
 
 /* Responsive Design */
@@ -858,15 +890,22 @@
   .qr-scanner-page .main-content {
     grid-template-columns: 1fr;
     gap: 25px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .qr-scanner-page {
     padding: 15px;
+    overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .qr-scanner-page .form-card {
     max-width: 500px;
     margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .qr-scanner-page .promo-banner {
@@ -880,6 +919,8 @@
 
   .qr-scanner-page .audio-section {
     padding: 30px;
+    width: 100%;
+    box-sizing: border-box;
   }
 }
 
@@ -932,20 +973,29 @@
     margin: 10px;
     padding: 20px;
     width: calc(100% - 20px);
+    box-sizing: border-box;
   }
 
   .qr-scanner-page .camera-video {
-    height: 250px;
+    height: 240px;
+  }
+
+  .qr-scanner-page .scanner-overlay {
+    gap: 8px;
+  }
+
+  .qr-scanner-page .scanner-instruction {
+    font-size: 0.95rem;
+    padding: 7px 15px;
+  }
+
+  .qr-scanner-page .popup-controls {
+    padding: 16px;
   }
 
   .qr-scanner-page .scanner-frame {
     width: 150px;
     height: 150px;
-  }
-
-  .qr-scanner-page .scanner-instruction {
-    font-size: 1rem;
-    padding: 8px 15px;
   }
 
   .qr-scanner-page .audio-section {
@@ -983,14 +1033,25 @@
 
   .qr-scanner-page .audio-item {
     padding: 15px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .qr-scanner-page .audio-term,
+  .qr-scanner-page .audio-play-count {
+    width: 100%;
+    word-break: break-word;
   }
 
   .qr-scanner-page .book-info {
     padding: 25px 20px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .qr-scanner-page .book-info h2 {
     font-size: 1.6rem;
+    word-break: break-word;
   }
 
   .qr-scanner-page .book-authors {
@@ -1006,15 +1067,20 @@
 @media (max-width: 640px) {
   .qr-scanner-page {
     padding: 8px;
+    overflow-x: hidden;
   }
 
   .qr-scanner-page .container {
     padding: 0;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .qr-scanner-page .form-card {
     padding: 20px 15px;
     border-radius: 12px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .qr-scanner-page .form-title {
@@ -1036,6 +1102,9 @@
     padding: 10px 15px;
     font-size: 13px;
     border-radius: 20px;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   .qr-scanner-page .phone-btn {
@@ -1048,55 +1117,124 @@
   }
 
   .qr-scanner-page .camera-popup {
-    margin: 5px;
+    margin: 0;
     padding: 15px;
     border-radius: 15px;
+    width: calc(100% - 30px);
+    box-sizing: border-box;
   }
 
   .qr-scanner-page .popup-header h3 {
     font-size: 1.3rem;
+    word-break: break-word;
   }
 
-  .camera-video {
-    height: 220px;
+  .qr-scanner-page .camera-popup {
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
   }
 
-  .scanner-frame {
-    width: 130px;
-    height: 130px;
+  .qr-scanner-page .camera-container {
+    flex: 1;
+    min-height: 150px;
   }
 
-  .audio-section {
-    padding: 20px 15px;
-    border-radius: 15px;
+  .qr-scanner-page .camera-video {
+    height: 100%;
+    min-height: 150px;
+    max-height: 50vh;
   }
 
-  .audio-player {
-    padding: 20px 15px;
-    border-radius: 15px;
+  .qr-scanner-page .scanner-overlay {
+    gap: 3px;
   }
 
-  .audio-list {
-    padding: 20px 15px;
-    border-radius: 15px;
+  .qr-scanner-page .scanner-instruction {
+    font-size: 0.8rem;
+    padding: 5px 10px;
   }
 
-  .audio-progress {
-    gap: 10px;
+  .qr-scanner-page .popup-header {
     padding: 12px;
   }
 
-  .time {
+  .qr-scanner-page .popup-header h3 {
+    font-size: 1.2rem;
+  }
+
+  .qr-scanner-page .popup-controls {
+    padding: 12px;
+  }
+
+  .qr-scanner-page .stop-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .qr-scanner-page .scanner-frame {
+    width: 110px;
+    height: 110px;
+  }
+
+  .qr-scanner-page .scanner-frame::before,
+  .qr-scanner-page .scanner-frame::after {
+    width: 15px;
+    height: 15px;
+    border: 2px solid #820d2c;
+  }
+
+  .qr-scanner-page .audio-section {
+    padding: 20px 15px;
+    border-radius: 15px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .qr-scanner-page .audio-player {
+    padding: 20px 15px;
+    border-radius: 15px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .qr-scanner-page .audio-list {
+    padding: 20px 15px;
+    border-radius: 15px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .qr-scanner-page .audio-progress {
+    gap: 10px;
+    padding: 12px;
+    flex-wrap: wrap;
+  }
+
+  .qr-scanner-page .time {
     font-size: 0.9rem;
     min-width: 40px;
   }
 
-  .progress-bar {
+  .qr-scanner-page .progress-bar {
     height: 10px;
+    flex: 1 1 100%;
   }
 
-  .book-info {
+  .qr-scanner-page .book-info {
     padding: 20px 15px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .qr-scanner-page .audio-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .qr-scanner-page .audio-term,
+  .qr-scanner-page .audio-play-count {
+    width: 100%;
   }
 
   .book-info h2 {
@@ -1177,38 +1315,56 @@
     font-size: 40px;
   }
 
-  .camera-popup {
+  .qr-scanner-page .camera-popup {
     margin: 0;
-    padding: 12px;
-    border-radius: 12px;
-    width: 100%;
-    height: 100vh;
+    padding: 10px;
+    border-radius: 10px;
+    width: calc(100% - 20px);
+    max-height: 85vh;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
   }
 
-  .popup-header h3 {
-    font-size: 1.2rem;
+  .qr-scanner-page .popup-header {
+    padding: 10px;
   }
 
-  .camera-container {
+  .qr-scanner-page .popup-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .qr-scanner-page .camera-container {
     flex: 1;
-    margin-bottom: 15px;
+    min-height: 140px;
   }
 
-  .camera-video {
+  .qr-scanner-page .camera-video {
     height: 100%;
-    min-height: 200px;
+    min-height: 140px;
   }
 
-  .scanner-frame {
-    width: 120px;
-    height: 120px;
+  .qr-scanner-page .scanner-overlay {
+    gap: 2px;
   }
 
-  .scanner-instruction {
-    font-size: 0.9rem;
-    padding: 6px 12px;
+  .qr-scanner-page .scanner-frame {
+    width: 100px;
+    height: 100px;
+  }
+
+  .qr-scanner-page .scanner-instruction {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+  }
+
+  .qr-scanner-page .popup-controls {
+    padding: 10px;
+  }
+
+  .qr-scanner-page .stop-btn {
+    padding: 8px 16px;
+    font-size: 13px;
   }
 
   .audio-section {
