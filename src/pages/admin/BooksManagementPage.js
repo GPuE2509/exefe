@@ -41,7 +41,7 @@ const BooksManagementPage = () => {
     total: 0,
     showSizeChanger: true,
     showQuickJumper: true,
-    showTotal: (total, range) => `${range[0]}-${range[1]} của ${total} sách`,
+    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} books`,
   });
   const [loading, setLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -64,11 +64,11 @@ const BooksManagementPage = () => {
         page,
         limit: pageSize
       });
-      
+
       if (response.success) {
         // Update books
         setBooks(response.data?.books || []);
-        
+
         // Update pagination
         const paginationData = response.data?.pagination;
         setPagination(prev => ({
@@ -78,10 +78,10 @@ const BooksManagementPage = () => {
           pageSize: pageSize,
         }));
       } else {
-        message.error(response.message || 'Lỗi khi tải danh sách sách');
+        message.error(response.message || 'Error fetching book list');
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Lỗi khi tải danh sách sách';
+      const errorMessage = error.response?.data?.message || error.message || 'Error fetching book list';
       message.error(errorMessage);
       console.error('Error fetching books:', error);
     } finally {
@@ -96,7 +96,7 @@ const BooksManagementPage = () => {
         sort: 'name',
         order: 'asc'
       });
-      
+
       if (response.success) {
         setGenres(response.data?.genres || []);
       } else {
@@ -136,15 +136,15 @@ const BooksManagementPage = () => {
     try {
       setDeleteLoading(true);
       const response = await adminBooksService.deleteBook(bookId);
-      
+
       if (response.success) {
-        message.success(response.message || 'Xóa sách thành công');
+        message.success(response.message || 'Book deleted successfully');
         fetchBooks(pagination.current, pagination.pageSize);
       } else {
-        message.error(response.message || 'Lỗi khi xóa sách');
+        message.error(response.message || 'Error deleting book');
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Lỗi khi xóa sách';
+      const errorMessage = error.response?.data?.message || error.message || 'Error deleting book';
       message.error(errorMessage);
       console.error('Error deleting book:', error);
     } finally {
@@ -155,7 +155,7 @@ const BooksManagementPage = () => {
   const handleSubmit = async (values) => {
     try {
       setSubmitLoading(true);
-      
+
       // Ensure all required fields are present
       const bookData = {
         title: values.title,
@@ -186,14 +186,14 @@ const BooksManagementPage = () => {
       }
 
       if (response.success) {
-        message.success(response.message || (editingBook ? 'Cập nhật sách thành công' : 'Thêm sách thành công'));
+        message.success(response.message || (editingBook ? 'Book updated successfully' : 'Book created successfully'));
         setModalVisible(false);
         fetchBooks(pagination.current, pagination.pageSize);
       } else {
-        message.error(response.message || (editingBook ? 'Lỗi khi cập nhật sách' : 'Lỗi khi thêm sách'));
+        message.error(response.message || (editingBook ? 'Error updating book' : 'Error adding book'));
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || (editingBook ? 'Lỗi khi cập nhật sách' : 'Lỗi khi thêm sách');
+      const errorMessage = error.response?.data?.message || error.message || (editingBook ? 'Error updating book' : 'Error adding book');
       message.error(errorMessage);
       console.error('Error saving book:', error);
     } finally {
@@ -205,15 +205,15 @@ const BooksManagementPage = () => {
     try {
       setUploadLoading(true);
       const response = await adminBooksService.uploadBookCover(bookId, file);
-      
+
       if (response.success) {
-        message.success(response.message || 'Tải ảnh bìa thành công');
+        message.success(response.message || 'Cover uploaded successfully');
         fetchBooks(pagination.current, pagination.pageSize);
       } else {
-        message.error(response.message || 'Lỗi khi tải ảnh bìa');
+        message.error(response.message || 'Error uploading cover');
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Lỗi khi tải ảnh bìa';
+      const errorMessage = error.response?.data?.message || error.message || 'Error uploading cover';
       message.error(errorMessage);
       console.error('Error uploading cover:', error);
     } finally {
@@ -227,7 +227,7 @@ const BooksManagementPage = () => {
 
   const columns = [
     {
-      title: 'Ảnh bìa',
+      title: 'Cover',
       dataIndex: 'coverImage',
       key: 'coverImage',
       width: 80,
@@ -243,28 +243,28 @@ const BooksManagementPage = () => {
       ),
     },
     {
-      title: 'Tên sách',
+      title: 'Title',
       dataIndex: 'title',
       key: 'title',
       ellipsis: true,
       width: 200,
     },
     {
-      title: 'Tác giả',
+      title: 'Author',
       dataIndex: 'authors',
       key: 'authors',
       responsive: ['lg'],
       render: (authors) => authors?.join(', ') || '-',
     },
     {
-      title: 'Thể loại',
+      title: 'Genre',
       dataIndex: 'genres',
       key: 'genres',
       responsive: ['xl'],
       render: (genres) => genres?.map(genre => genre.name).join(', ') || '-',
     },
     {
-      title: 'Giá',
+      title: 'Price',
       key: 'price',
       width: 120,
       render: (_, record) => {
@@ -285,7 +285,7 @@ const BooksManagementPage = () => {
       },
     },
     {
-      title: 'Tồn kho',
+      title: 'Stock',
       dataIndex: 'inventory',
       key: 'inventory',
       width: 80,
@@ -293,7 +293,7 @@ const BooksManagementPage = () => {
       render: (inventory) => inventory?.stock || 0,
     },
     {
-      title: 'Đánh giá',
+      title: 'Rating',
       key: 'rating',
       width: 100,
       responsive: ['xl'],
@@ -315,31 +315,31 @@ const BooksManagementPage = () => {
       render: (count) => count || 0,
     },
     {
-      title: 'Trạng thái',
+      title: 'Status',
       dataIndex: 'isActive',
       key: 'isActive',
       width: 100,
       responsive: ['md'],
       render: (isActive) => (
         <Tag color={isActive ? 'green' : 'red'} style={{ fontSize: '10px' }}>
-          {isActive ? 'Hoạt động' : 'Dừng'}
+          {isActive ? 'Active' : 'Inactive'}
         </Tag>
       ),
     },
     {
-      title: 'Ngày tạo',
+      title: 'Created At',
       dataIndex: 'createdAt',
       key: 'createdAt',
       width: 100,
       responsive: ['lg'],
       render: (date) => (
         <div style={{ fontSize: '12px' }}>
-          {new Date(date).toLocaleDateString('vi-VN')}
+          {new Date(date).toLocaleDateString('en-US')}
         </div>
       ),
     },
     {
-      title: 'Thao tác',
+      title: 'Actions',
       key: 'actions',
       width: 180,
       fixed: 'right',
@@ -352,7 +352,7 @@ const BooksManagementPage = () => {
             onClick={() => window.open(`/book/${record._id}`, '_blank')}
             className="mobile-hide-text"
           >
-            <span className="btn-text">Xem</span>
+            <span className="btn-text">View</span>
           </Button>
           <Button
             icon={<EditOutlined />}
@@ -360,7 +360,7 @@ const BooksManagementPage = () => {
             onClick={() => handleEditBook(record)}
             className="mobile-hide-text"
           >
-            <span className="btn-text">Sửa</span>
+            <span className="btn-text">Edit</span>
           </Button>
           <Upload
             showUploadList={false}
@@ -370,14 +370,14 @@ const BooksManagementPage = () => {
             }}
           >
             <Button icon={<UploadOutlined />} size="small" className="mobile-hide-text">
-              <span className="btn-text">Ảnh</span>
+              <span className="btn-text">Image</span>
             </Button>
           </Upload>
           <Popconfirm
-            title="Bạn có chắc muốn xóa sách này?"
+            title="Are you sure you want to delete this book?"
             onConfirm={() => handleDeleteBook(record._id)}
-            okText="Xóa"
-            cancelText="Hủy"
+            okText="Delete"
+            cancelText="Cancel"
           >
             <Button
               danger
@@ -385,7 +385,7 @@ const BooksManagementPage = () => {
               size="small"
               className="mobile-hide-text"
             >
-              <span className="btn-text">Xóa</span>
+              <span className="btn-text">Delete</span>
             </Button>
           </Popconfirm>
         </Space>
@@ -399,7 +399,7 @@ const BooksManagementPage = () => {
         <Row justify="space-between" align="middle" style={{ marginBottom: '16px' }}>
           <Col>
             <Title level={2} style={{ margin: 0 }}>
-              Quản lý sách
+              Book Management
             </Title>
           </Col>
           <Col>
@@ -408,7 +408,7 @@ const BooksManagementPage = () => {
               icon={<PlusOutlined />}
               onClick={handleAddBook}
             >
-              Thêm sách mới
+              Add New Book
             </Button>
           </Col>
         </Row>
@@ -428,7 +428,7 @@ const BooksManagementPage = () => {
       </Card>
 
       <Modal
-        title={editingBook ? 'Chỉnh sửa sách' : 'Thêm sách mới'}
+        title={editingBook ? 'Edit Book' : 'Add New Book'}
         open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={null}
@@ -444,41 +444,41 @@ const BooksManagementPage = () => {
             <Col xs={24} md={12}>
               <Form.Item
                 name="title"
-                label="Tên sách"
-                rules={[{ required: true, message: 'Vui lòng nhập tên sách' }]}
+                label="Title"
+                rules={[{ required: true, message: 'Please enter book title' }]}
               >
-                <Input placeholder="Nhập tên sách" />
+                <Input placeholder="Enter book title" />
               </Form.Item>
             </Col>
             <Col xs={24} md={12}>
               <Form.Item
                 name="authors"
-                label="Tác giả"
-                rules={[{ required: true, message: 'Vui lòng nhập tác giả' }]}
+                label="Author"
+                rules={[{ required: true, message: 'Please enter author' }]}
               >
-                <Input placeholder="Tác giả 1, Tác giả 2, ..." />
+                <Input placeholder="Author 1, Author 2, ..." />
               </Form.Item>
             </Col>
           </Row>
 
           <Form.Item
             name="description"
-            label="Mô tả"
-            rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}
+            label="Description"
+            rules={[{ required: true, message: 'Please enter description' }]}
           >
-            <TextArea rows={4} placeholder="Nhập mô tả sách" />
+            <TextArea rows={4} placeholder="Enter book description" />
           </Form.Item>
 
           <Row gutter={16}>
             <Col xs={24} sm={6}>
               <Form.Item
                 name="priceList"
-                label="Giá niêm yết"
-                rules={[{ required: true, message: 'Vui lòng nhập giá niêm yết' }]}
+                label="List Price"
+                rules={[{ required: true, message: 'Please enter list price' }]}
               >
                 <InputNumber
                   style={{ width: '100%' }}
-                  placeholder="Giá niêm yết"
+                  placeholder="List Price"
                   formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                   parser={value => value.replace(/\$\s?|(,*)/g, '')}
                   min={0}
@@ -488,11 +488,11 @@ const BooksManagementPage = () => {
             <Col xs={24} sm={6}>
               <Form.Item
                 name="priceSale"
-                label="Giá khuyến mãi"
+                label="Sale Price"
               >
                 <InputNumber
                   style={{ width: '100%' }}
-                  placeholder="Giá khuyến mãi"
+                  placeholder="Sale Price"
                   formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                   parser={value => value.replace(/\$\s?|(,*)/g, '')}
                   min={0}
@@ -502,10 +502,10 @@ const BooksManagementPage = () => {
             <Col xs={24} sm={4}>
               <Form.Item
                 name="currency"
-                label="Tiền tệ"
-                rules={[{ required: true, message: 'Vui lòng chọn tiền tệ' }]}
+                label="Currency"
+                rules={[{ required: true, message: 'Please select currency' }]}
               >
-                <Select placeholder="Chọn tiền tệ">
+                <Select placeholder="Select currency">
                   <Option value="VND">VNĐ</Option>
                   <Option value="USD">USD</Option>
                   <Option value="EUR">EUR</Option>
@@ -515,11 +515,11 @@ const BooksManagementPage = () => {
             <Col xs={24} sm={8}>
               <Form.Item
                 name="genre"
-                label="Thể loại"
-                rules={[{ required: true, message: 'Vui lòng chọn thể loại' }]}
+                label="Genre"
+                rules={[{ required: true, message: 'Please select genre' }]}
               >
-                <Select 
-                  placeholder="Chọn thể loại"
+                <Select
+                  placeholder="Select genre"
                   loading={genres.length === 0}
                   showSearch
                   filterOption={(input, option) =>
@@ -540,9 +540,9 @@ const BooksManagementPage = () => {
             <Col xs={24} sm={12}>
               <Form.Item
                 name="publisher"
-                label="Nhà xuất bản"
+                label="Publisher"
               >
-                <Input placeholder="Nhập nhà xuất bản" />
+                <Input placeholder="Enter publisher" />
               </Form.Item>
             </Col>
           </Row>
@@ -551,18 +551,18 @@ const BooksManagementPage = () => {
             <Col xs={24} sm={12}>
               <Form.Item
                 name="stock"
-                label="Số lượng tồn kho"
-                rules={[{ required: true, message: 'Vui lòng nhập số lượng' }]}
+                label="Stock Quantity"
+                rules={[{ required: true, message: 'Please enter stock quantity' }]}
               >
-                <InputNumber style={{ width: '100%' }} placeholder="Nhập số lượng" min={0} />
+                <InputNumber style={{ width: '100%' }} placeholder="Enter quantity" min={0} />
               </Form.Item>
             </Col>
             <Col xs={24} sm={12}>
               <Form.Item
                 name="sku"
-                label="Mã SKU"
+                label="SKU"
               >
-                <Input placeholder="Nhập mã SKU" />
+                <Input placeholder="Enter SKU" />
               </Form.Item>
             </Col>
           </Row>
@@ -572,36 +572,36 @@ const BooksManagementPage = () => {
           <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
             <Space>
               <Button onClick={() => setModalVisible(false)}>
-                Hủy
+                Cancel
               </Button>
               <Button type="primary" htmlType="submit">
-                {editingBook ? 'Cập nhật' : 'Thêm mới'}
+                {editingBook ? 'Update' : 'Create'}
               </Button>
             </Space>
           </Form.Item>
-          </Form>
-        </Modal>
+        </Form>
+      </Modal>
 
-        {/* Loading Modals */}
-        <LoadingModal 
-          visible={submitLoading}
-          message={editingBook ? 'Đang cập nhật sách...' : 'Đang thêm sách mới...'}
-          tip="Vui lòng đợi trong giây lát"
-        />
-        
-        <LoadingModal 
-          visible={deleteLoading}
-          message="Đang xóa sách..."
-          tip="Vui lòng đợi trong giây lát"
-        />
-        
-        <LoadingModal 
-          visible={uploadLoading}
-          message="Đang tải ảnh bìa..."
-          tip="Vui lòng đợi trong giây lát"
-        />
-      </div>
-    );
-  };
+      {/* Loading Modals */}
+      <LoadingModal
+        visible={submitLoading}
+        message={editingBook ? 'Updating book...' : 'Adding new book...'}
+        tip="Please wait a moment"
+      />
+
+      <LoadingModal
+        visible={deleteLoading}
+        message="Deleting book..."
+        tip="Please wait a moment"
+      />
+
+      <LoadingModal
+        visible={uploadLoading}
+        message="Uploading cover..."
+        tip="Please wait a moment"
+      />
+    </div>
+  );
+};
 
 export default BooksManagementPage;

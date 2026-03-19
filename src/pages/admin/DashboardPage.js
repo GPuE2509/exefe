@@ -36,7 +36,7 @@ const DashboardPage = () => {
 
       // Check if all responses are successful
       const allSuccessful = [statsData, booksData, genresData, usersData].every(response => response.success);
-      
+
       if (allSuccessful) {
         setDashboardData({
           stats: statsData.data || {},
@@ -48,11 +48,11 @@ const DashboardPage = () => {
         // Find first failed response and show its message
         const failedResponse = [statsData, booksData, genresData, usersData].find(response => !response.success);
         if (failedResponse) {
-          message.error(failedResponse.message || 'Lỗi khi tải dữ liệu dashboard');
+          message.error(failedResponse.message || 'Error fetching dashboard data');
         }
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Lỗi khi tải dữ liệu dashboard';
+      const errorMessage = error.response?.data?.message || error.message || 'Error fetching dashboard data';
       message.error(errorMessage);
       console.error('Error fetching dashboard data:', error);
     } finally {
@@ -62,28 +62,28 @@ const DashboardPage = () => {
 
   const statsCards = [
     {
-      title: 'Tổng số sách',
+      title: 'Total Books',
       value: dashboardData.stats.totalBooks || 0,
       icon: <BookOutlined />,
       color: '#1890ff',
       trend: '+12%'
     },
     {
-      title: 'Tổng số người dùng',
+      title: 'Total Users',
       value: dashboardData.stats.totalUsers || 0,
       icon: <UserOutlined />,
       color: '#52c41a',
       trend: '+8%'
     },
     {
-      title: 'Đơn hàng',
+      title: 'Orders',
       value: dashboardData.stats.totalOrders || 0,
       icon: <ShoppingCartOutlined />,
       color: '#fa8c16',
       trend: '+15%'
     },
     {
-      title: 'Audio sách',
+      title: 'Book Audios',
       value: dashboardData.stats.totalAudios || 0,
       icon: <AudioOutlined />,
       color: '#722ed1',
@@ -93,43 +93,43 @@ const DashboardPage = () => {
 
   const recentBooksColumns = [
     {
-      title: 'Tên sách',
+      title: 'Title',
       dataIndex: 'title',
       key: 'title',
     },
     {
-      title: 'Tác giả',
+      title: 'Author',
       dataIndex: 'authors',
       key: 'authors',
       render: (authors) => authors?.join(', ') || '-'
     },
     {
-      title: 'Giá',
+      title: 'Price',
       dataIndex: 'price',
       key: 'price',
       render: (price) => `${price?.toLocaleString()} VNĐ`
     },
     {
-      title: 'Ngày tạo',
+      title: 'Created At',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: (date) => new Date(date).toLocaleDateString('vi-VN')
+      render: (date) => new Date(date).toLocaleDateString('en-US')
     }
   ];
 
   const topGenresColumns = [
     {
-      title: 'Thể loại',
+      title: 'Genre',
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: 'Số sách',
+      title: 'Book Count',
       dataIndex: 'bookCount',
       key: 'bookCount',
     },
     {
-      title: 'Tỷ lệ',
+      title: 'Percentage',
       dataIndex: 'percentage',
       key: 'percentage',
       render: (percentage) => (
@@ -142,7 +142,7 @@ const DashboardPage = () => {
     return (
       <div style={{ textAlign: 'center', padding: '50px' }}>
         <Spin size="large" />
-        <div style={{ marginTop: '16px' }}>Đang tải dữ liệu...</div>
+        <div style={{ marginTop: '16px' }}>Loading data...</div>
       </div>
     );
   }
@@ -150,7 +150,7 @@ const DashboardPage = () => {
   return (
     <div>
       <Title level={2}>Dashboard</Title>
-      
+
       {/* Statistics Cards */}
       <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
         {statsCards.map((stat, index) => (
@@ -175,27 +175,27 @@ const DashboardPage = () => {
       <Row gutter={[16, 16]}>
         {/* Recent Books */}
         <Col xs={24} lg={14}>
-          <Card title="Sách mới nhất" extra={<a href="/admin/books">Xem tất cả</a>}>
-             <Table
-               columns={recentBooksColumns}
-               dataSource={dashboardData.recentBooks || []}
-               rowKey="_id"
-               pagination={false}
-               size="small"
-             />
+          <Card title="Recent Books" extra={<a href="/admin/books">View All</a>}>
+            <Table
+              columns={recentBooksColumns}
+              dataSource={dashboardData.recentBooks || []}
+              rowKey="_id"
+              pagination={false}
+              size="small"
+            />
           </Card>
         </Col>
 
         {/* Top Genres */}
         <Col xs={24} lg={10}>
-          <Card title="Thể loại phổ biến">
-             <Table
-               columns={topGenresColumns}
-               dataSource={dashboardData.topGenres || []}
-               rowKey="_id"
-               pagination={false}
-               size="small"
-             />
+          <Card title="Popular Genres">
+            <Table
+              columns={topGenresColumns}
+              dataSource={dashboardData.topGenres || []}
+              rowKey="_id"
+              pagination={false}
+              size="small"
+            />
           </Card>
         </Col>
       </Row>
@@ -203,13 +203,13 @@ const DashboardPage = () => {
       <Row gutter={[16, 16]} style={{ marginTop: '16px' }}>
         {/* User Growth Chart */}
         <Col xs={24} lg={12}>
-          <Card title="Tăng trưởng người dùng">
+          <Card title="User Growth">
             <div style={{ height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <div style={{ textAlign: 'center' }}>
                 <Title level={4} style={{ color: '#1890ff' }}>
                   +{dashboardData.stats.newUsersThisMonth || 0}
                 </Title>
-                <p>Người dùng mới tháng này</p>
+                <p>New users this month</p>
               </div>
             </div>
           </Card>
@@ -217,30 +217,30 @@ const DashboardPage = () => {
 
         {/* Quick Actions */}
         <Col xs={24} lg={12}>
-          <Card title="Thao tác nhanh">
+          <Card title="Quick Actions">
             <Row gutter={[8, 8]}>
               <Col span={12}>
                 <Card size="small" hoverable style={{ textAlign: 'center' }}>
                   <BookOutlined style={{ fontSize: '24px', color: '#1890ff' }} />
-                  <div style={{ marginTop: '8px' }}>Thêm sách</div>
+                  <div style={{ marginTop: '8px' }}>Add Book</div>
                 </Card>
               </Col>
               <Col span={12}>
                 <Card size="small" hoverable style={{ textAlign: 'center' }}>
                   <AudioOutlined style={{ fontSize: '24px', color: '#52c41a' }} />
-                  <div style={{ marginTop: '8px' }}>Thêm Audio</div>
+                  <div style={{ marginTop: '8px' }}>Add Audio</div>
                 </Card>
               </Col>
               <Col span={12}>
                 <Card size="small" hoverable style={{ textAlign: 'center' }}>
                   <UserOutlined style={{ fontSize: '24px', color: '#fa8c16' }} />
-                  <div style={{ marginTop: '8px' }}>Quản lý User</div>
+                  <div style={{ marginTop: '8px' }}>Manage Users</div>
                 </Card>
               </Col>
               <Col span={12}>
                 <Card size="small" hoverable style={{ textAlign: 'center' }}>
                   <ShoppingCartOutlined style={{ fontSize: '24px', color: '#722ed1' }} />
-                  <div style={{ marginTop: '8px' }}>Đơn hàng</div>
+                  <div style={{ marginTop: '8px' }}>Orders</div>
                 </Card>
               </Col>
             </Row>

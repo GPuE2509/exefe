@@ -11,6 +11,44 @@
     background-color: #820d2c;
     padding: 10px 0;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.header.shrink {
+    padding: 0;
+}
+
+.header.shrink .nav-container {
+    padding: 5px 0;
+}
+
+.header.shrink .logo img {
+    width: 100px;
+    transition: width 0.3s ease;
+}
+
+.header.shrink .top-bar {
+    max-height: 0;
+    padding: 0 20px;
+    /* Keep horizontal padding to prevent width jump, vertical 0 */
+    opacity: 0;
+    margin: 0;
+    border-bottom: none;
+    pointer-events: none;
+    /* Prevent clicks when hidden */
+}
+
+/* Add max-height to top-bar default state for transition */
+.top-bar {
+    max-height: 200px;
+    /* Arbitrary large enough value */
+    transition: all 0.5s ease-in-out;
+    opacity: 1;
+    overflow: hidden;
+    /* Needed for max-height transition */
 }
 
 /* Thanh trên cùng */
@@ -81,7 +119,8 @@
 }
 
 /* Đảm bảo icon không bị lệch */
-.menu-button, .search-button {
+.menu-button,
+.search-button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -97,26 +136,29 @@
 }
 
 /* Định dạng icon */
-.social-icons a {
+/* Định dạng icon */
+.social-icons .social-icon {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    overflow: hidden;
+    color: #820d2c;
+    background-color: #f8e7c9;
+    font-size: 20px;
+    transition: all 0.3s ease-in-out;
 }
 
-.social-icons img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transition: transform 0.3s ease-in-out;
+.social-icons .social-icon:hover {
+    transform: translateY(-3px);
+    background-color: #d4af7a;
+    color: #6b0b24;
 }
 
-/* Hiệu ứng phóng to khi hover */
-.social-icons img:hover {
-    transform: scale(1.1);
+/* Căn chỉnh icon Instagram đúng vị trí trung tâm (không cần thiết với flex nhưng giữ layout cũ) */
+.social-icons .social-icon:nth-child(2) {
+    margin: 0 auto;
 }
 
 /* Căn chỉnh icon Instagram đúng vị trí trung tâm */
@@ -438,25 +480,22 @@
     gap: 15px;
 }
 
-.sidebar-social .social-links a {
+.sidebar-social .social-links .social-icon {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    overflow: hidden;
+    color: #820d2c;
+    background-color: #f8e7c9;
+    font-size: 20px;
     transition: transform 0.3s;
 }
 
-.sidebar-social .social-links a:hover {
+.sidebar-social .social-links .social-icon:hover {
     transform: scale(1.1);
-}
-
-.sidebar-social .social-links img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+    background-color: #d4af7a;
 }
 
 /* Responsive Design */
@@ -466,11 +505,11 @@
     .mobile-header {
         display: none;
     }
-    
+
     .desktop-header {
         display: block;
     }
-    
+
     .sidebar,
     .sidebar-overlay {
         display: none;
@@ -483,16 +522,16 @@
         display: flex;
         padding: 12px 20px;
     }
-    
+
     .desktop-header,
     .nav-container {
         display: none;
     }
-    
+
     .mobile-logo-section .logo img {
         width: 120px;
     }
-    
+
     .slogan {
         font-size: 14px;
     }
@@ -504,26 +543,26 @@
         display: flex;
         padding: 10px 15px;
     }
-    
+
     .desktop-header,
     .nav-container {
         display: none;
     }
-    
+
     .mobile-logo-section .logo img {
         width: 100px;
     }
-    
+
     .slogan {
         font-size: 13px;
     }
-    
+
     /* Adjust sidebar for mobile */
     .sidebar {
         width: 100%;
         left: -100%;
     }
-    
+
     .sidebar.active {
         left: 0;
     }
@@ -534,34 +573,34 @@
     .mobile-header {
         padding: 8px 12px;
     }
-    
+
     .mobile-logo-section .logo img {
         width: 85px;
     }
-    
+
     .slogan {
         font-size: 12px;
     }
-    
+
     .mobile-menu-toggle {
         font-size: 20px;
         padding: 6px;
     }
-    
+
     .sidebar {
         width: 100%;
     }
-    
+
     .sidebar-nav a,
     .sidebar-user a {
         padding: 12px 15px;
         font-size: 15px;
     }
-    
+
     .sidebar-header {
         padding: 15px;
     }
-    
+
     .sidebar-social {
         padding: 15px;
     }
@@ -572,20 +611,20 @@
     .mobile-header {
         padding: 6px 10px;
     }
-    
+
     .mobile-logo-section .logo img {
         width: 75px;
     }
-    
+
     .slogan {
         font-size: 11px;
     }
-    
+
     .mobile-menu-toggle {
         font-size: 18px;
         padding: 5px;
     }
-    
+
     .sidebar-nav a,
     .sidebar-user a {
         padding: 10px 12px;
@@ -599,17 +638,17 @@
         width: 250px;
         left: -250px;
     }
-    
+
     .sidebar-header {
         padding: 12px 15px;
     }
-    
+
     .sidebar-nav a,
     .sidebar-user a {
         padding: 8px 15px;
         font-size: 14px;
     }
-    
+
     .sidebar-social {
         padding: 12px 15px;
     }

@@ -107,8 +107,11 @@ export const adminBookImagesService = {
   // Upload book images
   uploadBookImages: (bookId, files) => {
     const formData = new FormData();
-    files.forEach(file => {
-      formData.append('images', file);
+    const normalizedFiles = Array.isArray(files) ? files : [files];
+    normalizedFiles.forEach(file => {
+      if (file) {
+        formData.append('image', file);
+      }
     });
     const endpoint = API_CONFIG.ENDPOINTS.ADMIN.BOOK_IMAGES.replace(':bookId', bookId);
     return apiClient.post(endpoint, formData, {
@@ -120,14 +123,12 @@ export const adminBookImagesService = {
 
   // Delete book image
   deleteBookImage: (bookId, imageId) => {
-    const endpoint = API_CONFIG.ENDPOINTS.ADMIN.BOOK_IMAGES.replace(':bookId', bookId);
-    return apiClient.delete(`${endpoint}/${imageId}`);
+    return apiClient.delete(`/admin/images/${imageId}`);
   },
 
   // Set main image
   setMainImage: (bookId, imageId) => {
-    const endpoint = API_CONFIG.ENDPOINTS.ADMIN.BOOK_IMAGES.replace(':bookId', bookId);
-    return apiClient.put(`${endpoint}/${imageId}/set-main`);
+    return apiClient.put(`/admin/images/${imageId}`, { isCover: true });
   }
 };
 
@@ -207,5 +208,41 @@ export const adminStatisticsService = {
   // Get order statistics
   getOrderStats: () => {
     return apiClient.get(`${API_CONFIG.ENDPOINTS.ADMIN.STATISTICS}/orders`);
+  }
+};
+
+// Admin Banners Service
+export const adminBannerService = {
+  // Get all banners
+  getBanners: (params = {}) => {
+    return apiClient.get(API_CONFIG.ENDPOINTS.ADMIN.BANNERS, { params });
+  },
+
+  // Get banner by ID
+  getBannerById: (id) => {
+    return apiClient.get(`${API_CONFIG.ENDPOINTS.ADMIN.BANNERS}/${id}`);
+  },
+
+  // Create new banner
+  createBanner: (bannerData) => {
+    return apiClient.post(API_CONFIG.ENDPOINTS.ADMIN.BANNERS, bannerData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
+
+  // Update banner
+  updateBanner: (id, bannerData) => {
+    return apiClient.put(`${API_CONFIG.ENDPOINTS.ADMIN.BANNERS}/${id}`, bannerData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
+
+  // Delete banner
+  deleteBanner: (id) => {
+    return apiClient.delete(`${API_CONFIG.ENDPOINTS.ADMIN.BANNERS}/${id}`);
   }
 };

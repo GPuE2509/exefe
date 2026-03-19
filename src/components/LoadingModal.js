@@ -4,10 +4,10 @@ import { LoadingOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
-const LoadingModal = ({ 
-  visible, 
-  message = 'Đang xử lý...', 
-  tip = 'Vui lòng đợi trong giây lát' 
+const LoadingModal = ({
+  visible,
+  message = 'Processing...',
+  tip = 'Please wait a moment'
 }) => {
   const antIcon = <LoadingOutlined style={{ fontSize: 40, color: '#1890ff' }} spin />;
 

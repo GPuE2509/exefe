@@ -28,7 +28,7 @@ const Carousel3D = ({ data, activeSlide = 0, autoSlide = true, slideInterval = 1
     if (!autoSlide || isPaused) return;
 
     const interval = setInterval(() => {
-      setCurrentSlide((prevSlide) => 
+      setCurrentSlide((prevSlide) =>
         prevSlide === data.length - 1 ? 0 : prevSlide + 1
       );
     }, slideInterval);
@@ -53,7 +53,7 @@ const Carousel3D = ({ data, activeSlide = 0, autoSlide = true, slideInterval = 1
 
   const handleTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
-    
+
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > 50;
     const isRightSwipe = distance < -50;
@@ -157,7 +157,7 @@ const Carousel3D = ({ data, activeSlide = 0, autoSlide = true, slideInterval = 1
   return (
     <>
       {/* carousel */}
-      <div 
+      <div
         className="slideC"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
@@ -223,9 +223,13 @@ const Carousel3D = ({ data, activeSlide = 0, autoSlide = true, slideInterval = 1
 const SliderContent = (props) => {
   return (
     <div className="sliderContent">
-      {props.icon}
-      <h2>{props.title}</h2>
-      <p>{props.desc}</p>
+      <div className="banner-image-wrapper">
+        <img className="banner-full-image" src={props.imageUrl} alt={props.title} />
+      </div>
+      <div className="banner-overlay-content">
+        <h2>{props.title}</h2>
+        <p>{props.desc}</p>
+      </div>
     </div>
   );
 };

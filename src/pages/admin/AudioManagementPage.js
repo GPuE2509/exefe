@@ -54,7 +54,7 @@ const AudioManagementPage = () => {
     total: 0,
     showSizeChanger: true,
     showQuickJumper: true,
-    showTotal: (total, range) => `${range[0]}-${range[1]} của ${total} audio`,
+    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} audios`,
   });
   const [form] = Form.useForm();
 
@@ -81,14 +81,14 @@ const AudioManagementPage = () => {
   const fetchBooks = async () => {
     try {
       const response = await adminBooksService.getBooks();
-      
+
       if (response.success) {
         setBooks(response.data?.books || []);
       } else {
-        message.error(response.message || 'Lỗi khi tải danh sách sách');
+        message.error(response.message || 'Error fetching book list');
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Lỗi khi tải danh sách sách';
+      const errorMessage = error.response?.data?.message || error.message || 'Error fetching book list';
       message.error(errorMessage);
       console.error('Error fetching books:', error);
     }
@@ -101,10 +101,10 @@ const AudioManagementPage = () => {
         page,
         limit: pageSize
       });
-      
+
       if (response.success) {
         setAudios(response.data?.audioItems || []);
-        
+
         // Update pagination
         const paginationData = response.data?.pagination;
         if (paginationData) {
@@ -116,10 +116,10 @@ const AudioManagementPage = () => {
           }));
         }
       } else {
-        message.error(response.message || 'Lỗi khi tải danh sách audio');
+        message.error(response.message || 'Error fetching audio list');
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Lỗi khi tải danh sách audio';
+      const errorMessage = error.response?.data?.message || error.message || 'Error fetching audio list';
       message.error(errorMessage);
       console.error('Error fetching audios:', error);
     } finally {
@@ -139,7 +139,7 @@ const AudioManagementPage = () => {
 
   const handleAddAudio = () => {
     if (!selectedBookId) {
-      message.warning('Vui lòng chọn sách trước');
+      message.warning('Please select a book first');
       return;
     }
     setEditingAudio(null);
@@ -162,15 +162,15 @@ const AudioManagementPage = () => {
     try {
       setDeleteLoading(true);
       const response = await adminAudiosService.deleteAudio(audioId);
-      
+
       if (response.success) {
-        message.success(response.message || 'Xóa audio thành công');
+        message.success(response.message || 'Audio deleted successfully');
         fetchAudios(selectedBookId, pagination.current, pagination.pageSize);
       } else {
-        message.error(response.message || 'Lỗi khi xóa audio');
+        message.error(response.message || 'Error deleting audio');
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Lỗi khi xóa audio';
+      const errorMessage = error.response?.data?.message || error.message || 'Error deleting audio';
       message.error(errorMessage);
       console.error('Error deleting audio:', error);
     } finally {
@@ -181,14 +181,14 @@ const AudioManagementPage = () => {
   const handleSubmit = async (values) => {
     try {
       setSubmitLoading(true);
-      
+
       if (!selectedBookId) {
-        message.error('Vui lòng chọn sách');
+        message.error('Please select a book');
         return;
       }
 
       if (!uploadedFile && !editingAudio) {
-        message.error('Vui lòng chọn file audio');
+        message.error('Please select an audio file');
         return;
       }
 
@@ -207,16 +207,16 @@ const AudioManagementPage = () => {
       }
 
       if (response.success) {
-        message.success(response.message || (editingAudio ? 'Cập nhật audio thành công' : 'Thêm audio thành công'));
+        message.success(response.message || (editingAudio ? 'Audio updated successfully' : 'Audio added successfully'));
         setModalVisible(false);
         setUploadedFile(null);
         form.resetFields();
         fetchAudios(selectedBookId, pagination.current, pagination.pageSize);
       } else {
-        message.error(response.message || (editingAudio ? 'Lỗi khi cập nhật audio' : 'Lỗi khi thêm audio'));
+        message.error(response.message || (editingAudio ? 'Error updating audio' : 'Error adding audio'));
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || (editingAudio ? 'Lỗi khi cập nhật audio' : 'Lỗi khi thêm audio');
+      const errorMessage = error.response?.data?.message || error.message || (editingAudio ? 'Error updating audio' : 'Error adding audio');
       message.error(errorMessage);
       console.error('Error saving audio:', error);
     } finally {
@@ -226,21 +226,33 @@ const AudioManagementPage = () => {
 
   const handleAudioUpload = (file) => {
     // Validate file type
-    const allowedTypes = ['audio/mpeg', 'audio/wav', 'audio/mp4', 'audio/m4a'];
-    if (!allowedTypes.includes(file.type)) {
-      message.error('Chỉ hỗ trợ file audio (MP3, WAV, M4A)');
+    const allowedTypes = [
+      'audio/mpeg',
+      'audio/mp3',
+      'audio/wav',
+      'audio/x-wav',
+      'audio/mp4',
+      'audio/m4a',
+      'audio/x-m4a',
+      'video/mp4'
+    ];
+    const hasAllowedType = file.type ? allowedTypes.includes(file.type) : false;
+    const hasAllowedExtension = /\.(mp3|wav|m4a)$/i.test(file.name || '');
+
+    if (!hasAllowedType && !hasAllowedExtension) {
+      message.error('Only audio files (MP3, WAV, M4A) are supported');
       return false;
     }
 
     // Validate file size (max 10MB)
     const maxSize = 10 * 1024 * 1024; // 10MB
     if (file.size > maxSize) {
-      message.error('File quá lớn. Kích thước tối đa là 10MB');
+      message.error('File is too large. Max size is 10MB');
       return false;
     }
 
     setUploadedFile(file);
-    message.success(`Đã chọn file: ${file.name}`);
+    message.success(`Selected file: ${file.name}`);
     return false; // Prevent default upload
   };
 
@@ -260,34 +272,34 @@ const AudioManagementPage = () => {
       // Start loading and playing new audio
       setAudioLoading(audioUrl);
       const audio = new Audio(audioUrl);
-      
+
       // Handle when audio is ready to play
       audio.oncanplay = () => {
         setAudioLoading(null);
       };
-      
+
       audio.play().then(() => {
         setPlayingAudio(audioUrl);
         setAudioRef(audio);
-        
+
         // Handle audio end
         audio.onended = () => {
           setPlayingAudio(null);
           setAudioRef(null);
           setAudioLoading(null);
         };
-        
+
         // Handle audio error
         audio.onerror = (e) => {
           console.error('Audio playback error:', e);
-          message.error('Không thể phát audio này');
+          message.error('Cannot play this audio');
           setPlayingAudio(null);
           setAudioRef(null);
           setAudioLoading(null);
         };
       }).catch((error) => {
         console.error('Audio play error:', error);
-        message.error('Không thể phát audio này. Có thể file không tồn tại hoặc bị lỗi.');
+        message.error('Cannot play this audio. File may not exist or is corrupted.');
         setPlayingAudio(null);
         setAudioRef(null);
         setAudioLoading(null);
@@ -301,26 +313,26 @@ const AudioManagementPage = () => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      
+
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      
+
       // Get file extension from URL or default to mp3
       const urlParts = audioUrl.split('.');
       const extension = urlParts.length > 1 ? urlParts[urlParts.length - 1].split('?')[0] : 'mp3';
-      
+
       link.download = `${term || 'audio'}.${extension}`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      
-      message.success('Đã tải audio thành công');
+
+      message.success('Audio downloaded successfully');
     } catch (error) {
       console.error('Download error:', error);
-      message.error('Không thể tải audio này');
+      message.error('Cannot download this audio');
     }
   };
 
@@ -338,7 +350,7 @@ const AudioManagementPage = () => {
 
   const columns = [
     {
-      title: 'Từ vựng/Tiêu đề',
+      title: 'Term/Title',
       dataIndex: 'term',
       key: 'term',
       ellipsis: true,
@@ -363,12 +375,12 @@ const AudioManagementPage = () => {
       render: (qrUrl) => (
         qrUrl ? (
           <div style={{ textAlign: 'center' }}>
-            <img 
-              src={qrUrl} 
-              alt="QR Code" 
-              style={{ 
-                width: '40px', 
-                height: '40px', 
+            <img
+              src={qrUrl}
+              alt="QR Code"
+              style={{
+                width: '40px',
+                height: '40px',
                 objectFit: 'contain',
                 cursor: 'pointer',
                 border: '1px solid #d9d9d9',
@@ -377,18 +389,18 @@ const AudioManagementPage = () => {
               onClick={() => window.open(qrUrl, '_blank')}
             />
             <br />
-            <Button 
-              size="small" 
-              type="link" 
+            <Button
+              size="small"
+              type="link"
               href={qrUrl}
               download
               style={{ padding: 0, fontSize: '10px', marginTop: '4px' }}
             >
-              Tải QR
+              Download QR
             </Button>
           </div>
         ) : (
-          <span style={{ color: '#ccc' }}>Chưa có</span>
+          <span style={{ color: '#ccc' }}>None</span>
         )
       ),
     },
@@ -406,7 +418,7 @@ const AudioManagementPage = () => {
             disabled={!audioUrl}
             loading={audioLoading === audioUrl}
           >
-            {audioLoading === audioUrl ? 'Đang tải...' : playingAudio === audioUrl ? 'Dừng' : 'Phát'}
+            {audioLoading === audioUrl ? 'Loading...' : playingAudio === audioUrl ? 'Stop' : 'Play'}
           </Button>
           <Button
             size="small"
@@ -414,13 +426,13 @@ const AudioManagementPage = () => {
             onClick={() => handleDownloadAudio(audioUrl, record.term)}
             disabled={!audioUrl}
           >
-            Tải
+            Download
           </Button>
         </Space>
       ),
     },
     {
-      title: 'Lượt phát',
+      title: 'Plays',
       dataIndex: 'playCount',
       key: 'playCount',
       render: (count) => (
@@ -432,13 +444,13 @@ const AudioManagementPage = () => {
       ),
     },
     {
-      title: 'Ngày tạo',
+      title: 'Created At',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      render: (date) => new Date(date).toLocaleDateString('vi-VN'),
+      render: (date) => new Date(date).toLocaleDateString('en-US'),
     },
     {
-      title: 'Thao tác',
+      title: 'Actions',
       key: 'actions',
       render: (_, record) => (
         <Space size="small">
@@ -447,20 +459,20 @@ const AudioManagementPage = () => {
             size="small"
             onClick={() => handleEditAudio(record)}
           >
-            Sửa
+            Edit
           </Button>
           <Popconfirm
-            title="Bạn có chắc muốn xóa audio này?"
+            title="Are you sure you want to delete this audio?"
             onConfirm={() => handleDeleteAudio(record._id)}
-            okText="Xóa"
-            cancelText="Hủy"
+            okText="Delete"
+            cancelText="Cancel"
           >
             <Button
               danger
               icon={<DeleteOutlined />}
               size="small"
             >
-              Xóa
+              Delete
             </Button>
           </Popconfirm>
         </Space>
@@ -476,13 +488,13 @@ const AudioManagementPage = () => {
         <Row justify="space-between" align="middle" style={{ marginBottom: '16px' }}>
           <Col>
             <Title level={2} style={{ margin: 0 }}>
-              Quản lý Audio sách
+              Book Audio Management
             </Title>
           </Col>
           <Col>
             <Space>
               <Select
-                placeholder="Chọn sách"
+                placeholder="Select book"
                 style={{ width: 200 }}
                 onChange={handleBookChange}
                 value={selectedBookId}
@@ -499,7 +511,7 @@ const AudioManagementPage = () => {
                 onClick={handleAddAudio}
                 disabled={!selectedBookId}
               >
-                Thêm audio mới
+                Add New Audio
               </Button>
             </Space>
           </Col>
@@ -508,27 +520,27 @@ const AudioManagementPage = () => {
         {selectedBook && (
           <div style={{ marginBottom: '16px', padding: '12px', background: '#f5f5f5', borderRadius: '6px' }}>
             <Title level={4} style={{ margin: 0 }}>
-              Sách: {selectedBook.title}
+              Book: {selectedBook.title}
             </Title>
             <p style={{ margin: 0, color: '#666' }}>
-              Tác giả: {selectedBook.authors?.join(', ')}
+              Author: {selectedBook.authors?.join(', ')}
             </p>
           </div>
         )}
 
-         <Table
-           columns={columns}
-           dataSource={audios || []}
-           rowKey="_id"
-           loading={loading}
-           pagination={pagination}
-           onChange={handleTableChange}
-           scroll={{ x: 800 }}
-         />
+        <Table
+          columns={columns}
+          dataSource={audios || []}
+          rowKey="_id"
+          loading={loading}
+          pagination={pagination}
+          onChange={handleTableChange}
+          scroll={{ x: 800 }}
+        />
       </Card>
 
       <Modal
-        title={editingAudio ? 'Chỉnh sửa audio' : 'Thêm audio mới'}
+        title={editingAudio ? 'Edit Audio' : 'Add New Audio'}
         open={modalVisible}
         onCancel={() => !submitLoading && setModalVisible(false)}
         footer={null}
@@ -536,113 +548,113 @@ const AudioManagementPage = () => {
         closable={!submitLoading}
         maskClosable={!submitLoading}
       >
-        <Spin spinning={submitLoading} tip={editingAudio ? 'Đang cập nhật audio...' : 'Đang tạo audio mới...'}>
+        <Spin spinning={submitLoading} tip={editingAudio ? 'Updating audio...' : 'Creating new audio...'}>
           <Form
             form={form}
             layout="vertical"
             onFinish={handleSubmit}
           >
-          <Form.Item
-            name="term"
-            label="Từ vựng/Tiêu đề"
-            rules={[{ required: true, message: 'Vui lòng nhập từ vựng/tiêu đề' }]}
-          >
-            <Input placeholder="Nhập từ vựng hoặc tiêu đề audio" />
-          </Form.Item>
-
-          <Form.Item
-            name="description"
-            label="Mô tả"
-          >
-            <Input.TextArea rows={3} placeholder="Nhập mô tả audio" />
-          </Form.Item>
-
-          <Form.Item
-            name="qrToken"
-            label="QR Token"
-            rules={[{message: 'Vui lòng nhập QR Token' }]}
-          >
-            <Input
-              placeholder="Nhập QR Token hoặc để trống để tự động tạo"
-              suffix={
-                <Button
-                  size="small"
-                  onClick={() => form.setFieldsValue({ qrToken: generateQRToken() })}
-                >
-                  Tạo QR
-                </Button>
-              }
-            />
-          </Form.Item>
-
-          <Divider />
-
-          <div style={{ marginBottom: '16px' }}>
-            <Title level={5}>Tải file audio</Title>
-            <Upload
-              accept="audio/*"
-              beforeUpload={(file) => {
-                handleAudioUpload(file);
-                return false;
-              }}
-              showUploadList={false}
+            <Form.Item
+              name="term"
+              label="Term/Title"
+              rules={[{ required: true, message: 'Please enter term/title' }]}
             >
-              <Button icon={<UploadOutlined />}>
-                Chọn file audio
-              </Button>
-            </Upload>
-            
-            {uploadedFile && (
-              <div style={{ marginTop: '8px', padding: '8px', background: '#f0f0f0', borderRadius: '4px' }}>
-                <Space>
-                  <AudioOutlined />
-                  <span>{uploadedFile.name}</span>
-                  <span style={{ color: '#666' }}>
-                    ({(uploadedFile.size / 1024 / 1024).toFixed(2)} MB)
-                  </span>
-                  <Button 
-                    size="small" 
-                    type="text" 
-                    danger
-                    onClick={() => setUploadedFile(null)}
-                  >
-                    Xóa
-                  </Button>
-                </Space>
-              </div>
-            )}
-            
-            <p style={{ marginTop: '8px', color: '#666', fontSize: '12px' }}>
-              Hỗ trợ định dạng: MP3, WAV, M4A (tối đa 10MB)
-            </p>
-          </div>
+              <Input placeholder="Enter term or audio title" />
+            </Form.Item>
 
-          <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
-            <Space>
-              <Button 
-                onClick={() => setModalVisible(false)}
-                disabled={submitLoading}
+            <Form.Item
+              name="description"
+              label="Description"
+            >
+              <Input.TextArea rows={3} placeholder="Enter audio description" />
+            </Form.Item>
+
+            <Form.Item
+              name="qrToken"
+              label="QR Token"
+              rules={[{ message: 'Please enter QR Token' }]}
+            >
+              <Input
+                placeholder="Enter QR Token or leave empty to auto-generate"
+                suffix={
+                  <Button
+                    size="small"
+                    onClick={() => form.setFieldsValue({ qrToken: generateQRToken() })}
+                  >
+                    Generate QR
+                  </Button>
+                }
+              />
+            </Form.Item>
+
+            <Divider />
+
+            <div style={{ marginBottom: '16px' }}>
+              <Title level={5}>Upload Audio File</Title>
+              <Upload
+                accept="audio/*"
+                beforeUpload={(file) => {
+                  handleAudioUpload(file);
+                  return false;
+                }}
+                showUploadList={false}
               >
-                Hủy
-              </Button>
-              <Button 
-                type="primary" 
-                htmlType="submit"
-                loading={submitLoading}
-              >
-                {editingAudio ? 'Cập nhật' : 'Thêm mới'}
-              </Button>
-            </Space>
-          </Form.Item>
-        </Form>
+                <Button icon={<UploadOutlined />}>
+                  Select Audio File
+                </Button>
+              </Upload>
+
+              {uploadedFile && (
+                <div style={{ marginTop: '8px', padding: '8px', background: '#f0f0f0', borderRadius: '4px' }}>
+                  <Space>
+                    <AudioOutlined />
+                    <span>{uploadedFile.name}</span>
+                    <span style={{ color: '#666' }}>
+                      ({(uploadedFile.size / 1024 / 1024).toFixed(2)} MB)
+                    </span>
+                    <Button
+                      size="small"
+                      type="text"
+                      danger
+                      onClick={() => setUploadedFile(null)}
+                    >
+                      Delete
+                    </Button>
+                  </Space>
+                </div>
+              )}
+
+              <p style={{ marginTop: '8px', color: '#666', fontSize: '12px' }}>
+                Supported formats: MP3, WAV, M4A (max 10MB)
+              </p>
+            </div>
+
+            <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
+              <Space>
+                <Button
+                  onClick={() => setModalVisible(false)}
+                  disabled={submitLoading}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={submitLoading}
+                >
+                  {editingAudio ? 'Update' : 'Create'}
+                </Button>
+              </Space>
+            </Form.Item>
+          </Form>
         </Spin>
       </Modal>
 
       {/* Loading Modals */}
-      <LoadingModal 
+      <LoadingModal
         visible={deleteLoading}
-        message="Đang xóa audio..."
-        tip="Vui lòng đợi trong giây lát"
+        message="Deleting audio..."
+        tip="Please wait a moment"
       />
     </div>
   );
